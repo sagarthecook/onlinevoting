@@ -8,6 +8,6 @@ public class UserDetailsController {
 
     @PostMapping("/v1/data")
     public String getData(){
-        return "swamini";
+        return "thank you sir";
     }
 }
