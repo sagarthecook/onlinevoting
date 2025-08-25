@@ -1,25 +1,28 @@
 package com.onlinevoting.model;
-
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@MappedSuperclass
 @Getter
-@Setter
 public class AuditDetail {
     private String createdBy;
     private LocalDateTime createdDate;
     private String updateBy;
-    private LocalDateTime updatedBy;
+    private LocalDateTime updatedDate;
     private Boolean isActive;
+    @PrePersist
+    protected void onCreate() {
+        this.createdBy = "system"; // or get from security context
+        this.createdDate = LocalDateTime.now();
+        this.updatedDate = LocalDateTime.now();
+        this.isActive = true;
+    }
 
-    public AuditDetail(String createdBy, LocalDateTime createdDate, String updateBy, LocalDateTime updatedBy, Boolean isActive) {
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.updateBy = updateBy;
-        this.updatedBy = updatedBy;
-        this.isActive = isActive;
+    @PreUpdate
+    protected void onUpdate() {
+        this.updateBy = "system"; // or get from security context
+        this.updatedDate = LocalDateTime.now();
     }
 }

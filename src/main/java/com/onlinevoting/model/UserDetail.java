@@ -1,20 +1,14 @@
 package com.onlinevoting.model;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.sql.Date;
-import java.time.LocalDateTime;
 
 @Entity
-
-public class UserDetail {
+public class UserDetail extends AuditDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name")
     private String firstName;
     private String lastName;
     private String middleName;
@@ -23,11 +17,7 @@ public class UserDetail {
     private String address;
     private Date dob;
     private Long  aadharNumber;
-    private String createdBy;
-    private LocalDateTime createdDate;
-    private String updateBy;
-    private LocalDateTime updatedBy;
-    private Boolean isActive;
+
 
     public UserDetail(String firstName, String lastName, String middleName, String emailId, String phoneNo, String address,
                       Date dob, Long aadharNumber) {
@@ -82,23 +72,5 @@ public class UserDetail {
         return aadharNumber;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public LocalDateTime getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
+    
 }
