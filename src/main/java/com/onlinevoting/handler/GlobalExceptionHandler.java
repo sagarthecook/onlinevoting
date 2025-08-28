@@ -1,6 +1,8 @@
 package com.onlinevoting.handler;
 
 import com.onlinevoting.dto.ApiResponse;
+import com.onlinevoting.exception.UserNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,6 +18,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         String message = ex.getMostSpecificCause() != null ? ex.getMostSpecificCause().getMessage() : ex.getMessage();
         ApiResponse<Object> response = new ApiResponse<>(false, null, Collections.singletonList(message));
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleGenericException(UserNotFoundException ex) {   
+        ApiResponse<Object> response = new ApiResponse<>(false, null, 
+        Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

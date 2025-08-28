@@ -34,7 +34,9 @@ public class UserDetail extends AuditDetail {
     @NotNull(message = "Aadhar number is required")
     @Digits(integer = 12, fraction = 0, message = "Aadhar number must be 12 digits")
     private Long  aadharNumber;
-
+   
+    public UserDetail() {
+    }
 
     public UserDetail(String firstName, String lastName, String middleName, String emailId, String phoneNo, String address,
                       Date dob, Long aadharNumber) {
