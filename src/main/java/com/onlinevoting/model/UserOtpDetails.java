@@ -61,5 +61,8 @@ public class UserOtpDetails extends AuditDetail {
     public boolean isOtpUsed() {
         return isOtpUsed;
     }
+    public void setOtpUsed(boolean isOtpUsed) {
+        this.isOtpUsed = isOtpUsed;
+    }
 
 }

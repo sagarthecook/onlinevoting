@@ -86,7 +86,10 @@ public class LoginService {
             throw new IllegalArgumentException("No valid OTP found for user: " + userLoginInfoDto.getUserId());
         }
         if (userOtpDetails.get().getOtp().toString().equals(userLoginInfoDto.getOtp())) {
-               return true;
+            userOtpDetails.get().setOtpUsed(true);
+            userOtpDetailsRepository.save(userOtpDetails.get());
+            logger.info("User logged in successfully: " + userLoginInfoDto.getUserId());
+            return true;
         }
         throw new IllegalArgumentException("Invalid OTP for user: " + userLoginInfoDto.getUserId());
     }
