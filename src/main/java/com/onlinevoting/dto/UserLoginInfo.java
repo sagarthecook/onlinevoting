@@ -8,14 +8,7 @@ public class UserLoginInfo {
     @NotBlank
     @Email
     private String userId;
-
-
-    public String getUserId() {
-        return userId;
-    }
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+    
     public UserLoginInfo() {
     }
 
@@ -25,4 +18,13 @@ public class UserLoginInfo {
          } 
         this.userId = userId;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
 }

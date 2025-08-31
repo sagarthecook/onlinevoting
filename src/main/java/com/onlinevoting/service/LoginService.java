@@ -3,6 +3,7 @@ package com.onlinevoting.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.onlinevoting.constants.EmailConstants;
+import com.onlinevoting.dto.UserLoginDTO;
 import com.onlinevoting.dto.UserLoginInfo;
 import com.onlinevoting.exception.UserNotFoundException;
 import com.onlinevoting.model.UserDetail;
@@ -63,5 +65,29 @@ public class LoginService {
         } catch (Exception e) {
             logger.error("Failed to send OTP email to: " + userLoginInfo.getUserId()  , e);
         }
+    }
+
+    /**
+     * Login user with the given user login info.
+     * @param userLoginInfo
+     * @return a dummy JWT token if login is successful.
+     * @throws UserNotFoundException if the userId is not found in the database.
+     * @throws IllegalArgumentException if the OTP is invalid.
+     */
+
+    public boolean loginUser(UserLoginDTO userLoginInfoDto) {
+        UserDetail userDetail = userDetailRepository.findByEmailId(userLoginInfoDto.getUserId());
+        if (userDetail == null) {
+            throw new UserNotFoundException("User not found with email: " + userLoginInfoDto.getUserId());
+        }
+        Optional<UserOtpDetails> userOtpDetails = userOtpDetailsRepository.findByUserDetailIdAndIsOtpUsedFalse(userDetail.getId());
+      
+        if (userOtpDetails == null || !userOtpDetails.isPresent()) {
+            throw new IllegalArgumentException("No valid OTP found for user: " + userLoginInfoDto.getUserId());
+        }
+        if (userOtpDetails.get().getOtp().toString().equals(userLoginInfoDto.getOtp())) {
+               return true;
+        }
+        throw new IllegalArgumentException("Invalid OTP for user: " + userLoginInfoDto.getUserId());
     }
 }
