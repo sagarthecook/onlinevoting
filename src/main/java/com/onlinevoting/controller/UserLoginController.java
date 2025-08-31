@@ -17,7 +17,7 @@ public class UserLoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/v1/user/otp_generate")
+    @PostMapping("/v1/user/generate_otp")
     public ResponseEntity<ApiResponse> genrateOtp(@RequestBody @Valid UserLoginInfo userLoginInfo) {
         loginService.generateOtp(userLoginInfo);
         return ResponseEntity.ok(new ApiResponse<>(true, "OTP Generate Successfully"));

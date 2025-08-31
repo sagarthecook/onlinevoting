@@ -100,5 +100,7 @@ public class UserDetail extends AuditDetail {
         return aadharNumber;
     }
 
-    
+    public String fullName() {
+     return String.join(" ", firstName, lastName);
+    }
 }

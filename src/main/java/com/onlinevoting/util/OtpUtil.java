@@ -4,9 +4,9 @@ import java.util.Random;
 
 public class OtpUtil {
 
-    public Integer generateOtp() {
+    public static Integer generateOtp() {
       Random random = new Random();
-      return 100000 + random.nextInt(900000);
+      return 10000 + random.nextInt(90000);
     }
 
 }
