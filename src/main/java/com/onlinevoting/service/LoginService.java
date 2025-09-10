@@ -62,6 +62,7 @@ public class LoginService {
         if ( existingUserOtpDetails.isPresent() && !isOtpExpired(existingUserOtpDetails.get().getExpiryTime())) {
             throw new IllegalArgumentException("Otp already sent please check your email to login.");
          } else {
+
             // Generate a 5-digit OTP`
             Integer otp = OtpUtil.generateOtp();
             logger.info("Generated OTP: " + otp + " for user: " + userLoginInfo.getUserId());
@@ -71,8 +72,15 @@ public class LoginService {
            newUserOtpDetails.setActive(true);
            newUserOtpDetails.setExpiryTime(LocalDateTime.now(ZoneId.of("Asia/Kolkata")).atZone(ZoneId.of("Asia/Kolkata")).toInstant().toEpochMilli()); // Indian time           
            userOtpDetailsRepository.save(newUserOtpDetails);
+           
+           // to send the email
+           sentEmailToUser(userLoginInfo, userDetail, otp);
+         }
 
-           // Here, you would typically send the OTP to the user's email address.
+    }
+
+    private void sentEmailToUser(UserLoginInfo userLoginInfo, UserDetail userDetail, Integer otp) {
+        // Here, you would typically send the OTP to the user's email address.
             HashMap<String, Object> userOtpMap = new HashMap<String, Object>();
             userOtpMap.put("name", userDetail.fullName());
             userOtpMap.put("otp", otp.toString());
@@ -83,8 +91,6 @@ public class LoginService {
             } catch (Exception e) {
                 logger.error("Failed to send OTP email to: " + userLoginInfo.getUserId()  , e);
             }
-         }
-
     }
 
     private boolean isOtpExpired(Long expiryTime) {
@@ -104,22 +110,25 @@ public class LoginService {
      */
 
     public boolean loginUser(UserLoginDTO userLoginInfoDto) {
-        // UserDetail userDetail = userDetailRepository.findByEmailId(userLoginInfoDto.getUserId());
-        // if (userDetail == null) {
-        //     throw new UserNotFoundException("User not found with email: " + userLoginInfoDto.getUserId());
-        // }
-        // Optional<UserOtpDetails> userOtpDetails = userOtpDetailsRepository.findByUserDetailIdAndIsOtpUsedFalse(userDetail.getId());
+
+        UserDetail userDetail = userDetailRepository.findByEmailId(userLoginInfoDto.getUserId());
+        if (userDetail == null) {
+            throw new UserNotFoundException("User not found with email: " + userLoginInfoDto.getUserId());
+        }
+        
+        Optional<UserOtpDetails> userOtpDetails = userOtpDetailsRepository.findByUserDetailIdAndIsOtpUsedFalseAndIsActiveTrue(userDetail.getId());
       
-        // if (userOtpDetails == null || !userOtpDetails.isPresent()) {
-        //     throw new IllegalArgumentException("No valid OTP found for user: " + userLoginInfoDto.getUserId());
-        // }
-        // if (userOtpDetails.get().getOtp().toString().equals(userLoginInfoDto.getOtp())) {
-        //     userOtpDetails.get().setOtpUsed(true);
-        //     userOtpDetailsRepository.save(userOtpDetails.get());
-        //     logger.info("User logged in successfully: " + userLoginInfoDto.getUserId());
-        //     return true;
-        // }
-        // throw new IllegalArgumentException("Invalid OTP for user: " + userLoginInfoDto.getUserId());
-        return true;
+        if (userOtpDetails == null || !userOtpDetails.isPresent()) {
+            throw new IllegalArgumentException("No valid OTP found for user: " + userLoginInfoDto.getUserId());
+        }
+        
+        if (userOtpDetails.get().getOtp().toString().equals(userLoginInfoDto.getOtp()) && !isOtpExpired(userOtpDetails.get().getExpiryTime())) {
+            userOtpDetails.get().setOtpUsed(true);
+            userOtpDetails.get().setActive(false);
+            userOtpDetailsRepository.save(userOtpDetails.get());
+            logger.info("User logged in successfully: " + userLoginInfoDto.getUserId());
+            return true;
+        }
+        throw new IllegalArgumentException("Invalid OTP for user: " + userLoginInfoDto.getUserId());
     }
 }
