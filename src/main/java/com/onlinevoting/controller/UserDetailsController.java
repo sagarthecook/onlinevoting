@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,4 +44,17 @@ public class UserDetailsController {
         ApiResponse<UserDetail> response = new ApiResponse<>(true, userDetail, null);
         return ResponseEntity.ok(response);
     }
+
+    // Put API to update user details
+    @PutMapping(path = "/v1/user_detail", consumes = {"multipart/form-data"})
+    public ResponseEntity<ApiResponse<UserDetail>> updateUser(
+        @RequestPart("user")  @Valid String userDetail,
+        @RequestPart("photo") byte[] profilePhoto) throws Exception {
+        UserDetail detail =  new ObjectMapper().readValue(userDetail, UserDetail.class);
+        detail.setPhoto(profilePhoto);
+
+        UserDetail updatedUser = userDetailService.updateUser(detail);
+        ApiResponse<UserDetail> response = new ApiResponse<>(true, updatedUser, null);
+        return ResponseEntity.ok(response);
+        }
 }
