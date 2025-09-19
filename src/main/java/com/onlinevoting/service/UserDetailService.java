@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserDetailService {
+
      @Autowired
      private UserDetailRepository userDetailRepository;
 
@@ -66,5 +67,18 @@ public class UserDetailService {
 
           return userDetailRepository.save(user);
           
+     }
+
+     public void deleteUser(Long id) {
+
+          Optional<UserDetail> existingUserDetail = userDetailRepository.findByIdAndIsActiveTrue(id);
+          
+          if (existingUserDetail.isEmpty()) {
+               throw new IllegalArgumentException("User with account for ID " + id + " does not exist.");
+          }
+
+          UserDetail userDetail = existingUserDetail.get();
+          userDetail.setActive(false);
+          userDetailRepository.save(userDetail);
      }
 }
