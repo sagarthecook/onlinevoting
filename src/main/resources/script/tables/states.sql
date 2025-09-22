@@ -1,5 +1,5 @@
 
-CREATE TABLE state (
+CREATE TABLE states (
   id bigint NOT NULL AUTO_INCREMENT,
   name VARCHAR(50) UNIQUE NOT NULL,  
   country_id bigint NOT NULL,
