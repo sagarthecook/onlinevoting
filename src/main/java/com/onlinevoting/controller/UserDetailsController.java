@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinevoting.dto.ApiResponse;
 
-import java.net.http.HttpRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
