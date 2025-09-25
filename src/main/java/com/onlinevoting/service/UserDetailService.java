@@ -40,6 +40,9 @@ public class UserDetailService {
           }
           return uDetails;
      }
+     
+     
+
 
      public UserDetail getUserByEmail(String email) {
           return userDetailRepository.findByEmailId(email);
