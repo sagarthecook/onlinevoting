@@ -5,4 +5,4 @@ INSERT INTO states(name,country_id) values ("Maharashtra",1), ("Karnataka",1), (
 ("Uttar Pradesh",1), ("Uttarakhand",1), 
 ("Bihar",1), ("Gujarat",1), ("Chhattisgarh",1) ("Haryana",1), 
 ("Himachal Pradesh",1), ("Jharkhand",1),("Kerala",1) 
-("Madhya Pradesh",1), ("Manipur",1), ("Meghalaya",1),("West Bengal",1);
+("Madhya Pradesh",1), ("Manipur",1), ("Meghalaya",1),("West Bengal",1) ;
