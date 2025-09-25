@@ -5,9 +5,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity 
 @Table(name = "country")
+@Setter
+@Getter
 public class Country {
 
     @Id
@@ -18,17 +22,5 @@ public class Country {
 
     public Country() {
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }   
 
 }
