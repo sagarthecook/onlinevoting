@@ -26,8 +26,9 @@ public class UserDetail extends AuditDetail {
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phoneNo;
 
-    @NotBlank(message = "Address is required")
-    private String address;
+    @OneToOne
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
 
     @NotNull(message = "Date of birth is required")
     private Date dob;
@@ -43,7 +44,7 @@ public class UserDetail extends AuditDetail {
     public UserDetail() {
     }
 
-    public UserDetail(String firstName, String lastName, String middleName, String emailId, String phoneNo, String address,
+    public UserDetail(String firstName, String lastName, String middleName, String emailId, String phoneNo, Address address,
                       Date dob, Long aadharNumber, byte[] photo) {
         super();
         if (firstName == null || firstName.isBlank()) throw new IllegalArgumentException("First name is required");
@@ -51,7 +52,7 @@ public class UserDetail extends AuditDetail {
         if (emailId == null || emailId.isBlank()) throw new IllegalArgumentException("Email is required");
         if (!emailId.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) throw new IllegalArgumentException("Invalid email format");
         if (phoneNo != null && !phoneNo.matches("\\d{10}")) throw new IllegalArgumentException("Phone number must be 10 digits");
-        if (address == null || address.isBlank()) throw new IllegalArgumentException("Address is required");
+        if (address == null || address.getId() == null) throw new IllegalArgumentException("Address is required");
         if (dob == null) throw new IllegalArgumentException("Date of birth is required");
         if (aadharNumber == null) throw new IllegalArgumentException("Aadhar number is required");
         if (String.valueOf(aadharNumber).length() != 12) throw new IllegalArgumentException("Aadhar number must be 12 digits");
@@ -74,7 +75,7 @@ public class UserDetail extends AuditDetail {
         this.phoneNo = phoneNo;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
@@ -132,7 +133,7 @@ public class UserDetail extends AuditDetail {
         return phoneNo;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 

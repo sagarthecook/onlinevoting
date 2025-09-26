@@ -21,7 +21,7 @@ import lombok.Setter;
 public class Address {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String street;
@@ -42,6 +42,10 @@ public class Address {
 
     private Boolean isActive;
 
+    public Address(Long id) {
+        this.id = id;
+    }
+    
     public Address(String street, City cityId, State stateId, String zipCode, Country countryId, Boolean isActive) {
         this.street = street;
         this.cityId = cityId;
