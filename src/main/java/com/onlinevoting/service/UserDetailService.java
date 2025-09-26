@@ -3,6 +3,7 @@ package com.onlinevoting.service;
 import com.onlinevoting.constants.EmailConstants;
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.UserDetailRepository;
+import com.onlinevoting.util.DateUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -43,8 +44,6 @@ public class UserDetailService {
      }
      
      
-
-
      public UserDetail getUserByEmail(String email) {
           return userDetailRepository.findByEmailId(email);
      }

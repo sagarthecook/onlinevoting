@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.sql.Date;
 
+import com.onlinevoting.util.DateUtils;
+
 @Entity
 @Table(name = "user_detail")
 public class UserDetail extends AuditDetail {
@@ -53,7 +55,7 @@ public class UserDetail extends AuditDetail {
         if (!emailId.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) throw new IllegalArgumentException("Invalid email format");
         if (phoneNo != null && !phoneNo.matches("\\d{10}")) throw new IllegalArgumentException("Phone number must be 10 digits");
         if (address == null || address.getId() == null) throw new IllegalArgumentException("Address is required");
-        if (dob == null) throw new IllegalArgumentException("Date of birth is required");
+        if (dob== null || (dob !=null && !DateUtils.isDObValid(dob))) throw new IllegalArgumentException("Invalid date of birth");
         if (aadharNumber == null) throw new IllegalArgumentException("Aadhar number is required");
         if (String.valueOf(aadharNumber).length() != 12) throw new IllegalArgumentException("Aadhar number must be 12 digits");
         this.firstName = firstName;
@@ -66,6 +68,8 @@ public class UserDetail extends AuditDetail {
         this.aadharNumber = aadharNumber;
         this.photo = photo;
     }
+
+    
     
     public void setEmailId(String emailId) {
         this.emailId = emailId;
