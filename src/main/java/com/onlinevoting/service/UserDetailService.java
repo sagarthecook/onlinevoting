@@ -3,7 +3,6 @@ package com.onlinevoting.service;
 import com.onlinevoting.constants.EmailConstants;
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.UserDetailRepository;
-import com.onlinevoting.util.DateUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -32,6 +31,7 @@ public class UserDetailService {
                     userDetail.getMiddleName(), userDetail.getEmailId(), userDetail.getPhoneNo(),
                     userDetail.getAddress(),
                     userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getPhoto());
+                    userDetail.setActive(false);
           UserDetail uDetails = userDetailRepository.save(userDetail1);
           // Send welcome email
           try {
