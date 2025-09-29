@@ -27,12 +27,13 @@ public class UserDetailService {
                throw new IllegalArgumentException("User with account for email " + emailId + " already exists.");
           }
 
-          UserDetail userDetail1 = new UserDetail(userDetail.getFirstName(), userDetail.getLastName(),
+          UserDetail newUserDetail = new UserDetail(userDetail.getFirstName(), userDetail.getLastName(),
                     userDetail.getMiddleName(), userDetail.getEmailId(), userDetail.getPhoneNo(),
                     userDetail.getAddress(),
                     userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getPhoto());
-                    userDetail.setActive(false);
-          UserDetail uDetails = userDetailRepository.save(userDetail1);
+
+          newUserDetail.setActive(false);
+          UserDetail uDetails = userDetailRepository.save(newUserDetail);
           // Send welcome email
           try {
                emailService.sendEmailWithTemplate(userDetail.getEmailId(), EmailConstants.WELCOME_SUBJECT,
