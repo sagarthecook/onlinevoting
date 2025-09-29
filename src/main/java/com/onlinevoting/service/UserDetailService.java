@@ -4,6 +4,7 @@ import com.onlinevoting.constants.EmailConstants;
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.UserDetailRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -83,5 +84,9 @@ public class UserDetailService {
           UserDetail userDetail = existingUserDetail.get();
           userDetail.setActive(false);
           userDetailRepository.save(userDetail);
+     }
+
+     public List<UserDetail> getAllPendingApprovalUsers() {
+          return userDetailRepository.findByIsActiveFalse();
      }
 }

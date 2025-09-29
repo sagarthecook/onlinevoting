@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinevoting.dto.ApiResponse;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,5 +67,11 @@ public class UserDetailsController {
         ApiResponse<String> response = new ApiResponse<>(true, "User deleted successfully", null);
         return ResponseEntity.ok(response);
     }
-    
+
+    @GetMapping(path = "/v1/user_detail/findbyStatus", produces = { "application/json" })
+    public ResponseEntity<ApiResponse<List<UserDetail>>> getAllPendingApprovalUsers(@RequestParam("status") String status) {
+        List<UserDetail> userDetails = userDetailService.getAllPendingApprovalUsers();
+        ApiResponse<List<UserDetail>> response = new ApiResponse<>(true, userDetails, null);
+        return ResponseEntity.ok(response);
+    }
 }
