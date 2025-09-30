@@ -1,6 +1,7 @@
 package com.onlinevoting.service;
 
 import com.onlinevoting.constants.EmailConstants;
+import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.UserDetailRepository;
 
@@ -34,6 +35,8 @@ public class UserDetailService {
                     userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getPhoto());
 
           newUserDetail.setActive(false);
+          newUserDetail.setStatus(Status.PENDING.getDisplayName());
+
           UserDetail uDetails = userDetailRepository.save(newUserDetail);
           // Send welcome email
           try {
@@ -86,7 +89,15 @@ public class UserDetailService {
           userDetailRepository.save(userDetail);
      }
 
-     public List<UserDetail> getAllPendingApprovalUsers() {
-          return userDetailRepository.findByIsActiveFalse();
+     public List<UserDetail> getAllPendingApprovalUsers(String status) {
+          if(status == null) {
+               throw new IllegalArgumentException("Status parameter is required.");
+          } else if (status.equals(Status.APPROVED.getDisplayName())) {
+               return userDetailRepository.findByIsActiveAndStatus(Boolean.TRUE,status);
+          }else if (status.equals(Status.REJECTED.getDisplayName()) || status.equals(Status.PENDING.getDisplayName())) {
+               return userDetailRepository.findByIsActiveAndStatus(Boolean.FALSE,status);
+          }
+
+          return List.of();
      }
 }

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinevoting.dto.ApiResponse;
+import com.onlinevoting.enums.Status;
 
 import java.util.List;
 
@@ -69,8 +70,9 @@ public class UserDetailsController {
     }
 
     @GetMapping(path = "/v1/user_detail/findbyStatus", produces = { "application/json" })
-    public ResponseEntity<ApiResponse<List<UserDetail>>> getAllPendingApprovalUsers(@RequestParam("status") String status) {
-        List<UserDetail> userDetails = userDetailService.getAllPendingApprovalUsers();
+    public ResponseEntity<ApiResponse<List<UserDetail>>> getAllPendingApprovalUsers(
+        @RequestParam("status") String status) {
+        List<UserDetail> userDetails = userDetailService.getAllPendingApprovalUsers(status);
         ApiResponse<List<UserDetail>> response = new ApiResponse<>(true, userDetails, null);
         return ResponseEntity.ok(response);
     }
