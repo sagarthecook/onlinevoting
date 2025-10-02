@@ -57,6 +57,11 @@ public class UserDetailService {
      }
      
      public void approveUser(Long id, String status) {
+
+          if (status == null || (!status.equals(Status.APPROVED.getDisplayName()) && !status.equals(Status.REJECTED.getDisplayName()))) {
+               throw new IllegalArgumentException("Invalid status value. Only 'APPROVED' or 'REJECTED' are allowed.");
+          }
+
           Optional<UserDetail> existingUserDetail = userDetailRepository.findById(id);
           
           if (existingUserDetail.isEmpty()) {
@@ -74,12 +79,10 @@ public class UserDetailService {
                userDetail.setActive(false);
                userDetail.setStatus(status);
                userDetailRepository.save(userDetail);
-                 sendAccountRejectedEmail(userDetail.getEmailId(), userDetail.getFirstName(), userDetail.getEmailId(), "http://localhost:8080/help");
-          } else {
-               throw new IllegalArgumentException("Invalid status value. Only 'APPROVED' or 'REJECTED' are allowed.");
-          }
-
+               sendAccountRejectedEmail(userDetail.getEmailId(), userDetail.getFirstName(), userDetail.getEmailId(), "http://localhost:8080/help");
+          } 
      }
+     
      private void sendAccountRejectedEmail(String to, String name, String emailId, String helpUrl) {
           try {
                Map<String, Object> model = new HashMap<>();
