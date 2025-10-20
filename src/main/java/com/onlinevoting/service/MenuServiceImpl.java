@@ -1,7 +1,9 @@
 package com.onlinevoting.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,13 @@ import com.onlinevoting.repository.RoleFeatureMappingRepository;
 @Service
 public class MenuServiceImpl implements MenuService {
     
-    @Autowired
-    private RoleFeatureMappingRepository roleFeatureMappingRepository;
-    
-    @Autowired
-    private FeatureRepository featureRepository;
+    private final RoleFeatureMappingRepository roleFeatureMappingRepository;
+    private final FeatureRepository featureRepository;
+
+    public MenuServiceImpl(RoleFeatureMappingRepository roleFeatureMappingRepository, FeatureRepository featureRepository) {
+        this.roleFeatureMappingRepository = roleFeatureMappingRepository;
+        this.featureRepository = featureRepository;
+    }
 
     @Override
     public List<MenuDto> getMenuItemsByRoleId(Long roleId) {
@@ -28,12 +32,31 @@ public class MenuServiceImpl implements MenuService {
         
         List<Long> featureIds = featureMappings.stream().map(RoleFeatureMapping::getFeatureId).collect(Collectors.toList());
 
-        
         List<Feature> features = featureRepository.findByIdInAndIsActive(featureIds, true);
+        Map<Long, List<MenuDto>> menuIdAndSubmenuMap = new HashMap<>();
+        List<MenuDto> menuDtos = new ArrayList<>();
+        
+        for(Feature feature : features) {
 
-        return features.stream()
-                .map(this::convertToMenuDto)
-                .collect(Collectors.toList());
+            if(menuIdAndSubmenuMap.containsKey(feature.getMenuId())){
+                List<MenuDto> dtos= menuIdAndSubmenuMap.get(feature.getMenuId());
+                dtos.add(convertToMenuDto(feature));
+                continue;
+            }else {
+                List<MenuDto> subMenuList = new ArrayList<>();
+                subMenuList.add(convertToMenuDto(feature));
+                menuIdAndSubmenuMap.put(feature.getMenuId(), subMenuList);
+            }
+        }
+
+        for(Map.Entry<Long, List<MenuDto>> entry : menuIdAndSubmenuMap.entrySet()) {
+            Long menuId = entry.getKey();
+            List<MenuDto> subMenus = entry.getValue();
+            MenuDto mainMenuDto = new MenuDto(menuId.toString(), null, null, null,subMenus);
+            menuDtos.add(mainMenuDto);
+
+        }
+        return menuDtos;
     }
     
     private MenuDto convertToMenuDto(Feature feature) {
