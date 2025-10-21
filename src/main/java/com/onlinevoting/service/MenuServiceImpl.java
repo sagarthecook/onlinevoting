@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,9 @@ public class MenuServiceImpl implements MenuService {
         List<Long> featureIds = featureMappings.stream().map(RoleFeatureMapping::getFeatureId).collect(Collectors.toList());
 
         List<Feature> features = featureRepository.findByIdInAndIsActive(featureIds, true);
-        Map<Long, List<MenuDto>> menuIdAndSubmenuMap = new HashMap<>();
+        Map<Long, List<MenuDto>> menuIdAndSubmenuMap = new TreeMap<>();
         List<MenuDto> menuDtos = new ArrayList<>();
+        Map<Long, String> menuIdAndNameMap = new HashMap<>();
         
         for(Feature feature : features) {
 
@@ -47,12 +49,14 @@ public class MenuServiceImpl implements MenuService {
                 subMenuList.add(convertToMenuDto(feature));
                 menuIdAndSubmenuMap.put(feature.getMenuId(), subMenuList);
             }
+            menuIdAndNameMap.put(feature.getMenuId(), feature.getMenuName());
+
         }
 
         for(Map.Entry<Long, List<MenuDto>> entry : menuIdAndSubmenuMap.entrySet()) {
             Long menuId = entry.getKey();
             List<MenuDto> subMenus = entry.getValue();
-            MenuDto mainMenuDto = new MenuDto(menuId.toString(), null, null, null,subMenus);
+            MenuDto mainMenuDto = new MenuDto(menuId.toString(), menuIdAndNameMap.get(menuId), null, null, subMenus);
             menuDtos.add(mainMenuDto);
 
         }
