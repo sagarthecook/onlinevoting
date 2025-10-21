@@ -12,12 +12,12 @@ public class AuditDetail {
     private String updateBy;
     private LocalDateTime updatedDate;
     private Boolean isActive;
+
     @PrePersist
     protected void onCreate() {
         this.createdBy = "system"; // or get from security context
         this.createdDate = LocalDateTime.now();
         this.updatedDate = LocalDateTime.now();
-        this.isActive = true;
     }
 
     @PreUpdate
@@ -25,4 +25,21 @@ public class AuditDetail {
         this.updateBy = "system"; // or get from security context
         this.updatedDate = LocalDateTime.now();
     }
+
+    public void setActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }   
+
+    public void setUpdatedDate(LocalDateTime updatedDate) {
+        this.updatedDate = updatedDate;
+    }   
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
 }
