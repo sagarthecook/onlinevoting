@@ -23,6 +23,14 @@ public class ApiResponse<T> {
         this.data = data;
         this.errors = errors;
     }
+
+    public ApiResponse(boolean success,T data, String message, List<String> errors) {
+        this.success = success;
+        this.data = data;
+        this.message = message;
+        this.errors = errors;
+    }
+
     public ApiResponse(boolean success, T data, List<String> errors, String message) {
         this.success = success;
         this.data = data;
