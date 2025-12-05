@@ -78,7 +78,7 @@ public class LoginService {
            userOtpDetailsRepository.save(newUserOtpDetails);
            
            // to send the email
-           sentEmailToUser(userLoginInfo, userDetail, otp);
+        //    sentEmailToUser(userLoginInfo, userDetail, otp);
          }
 
     }
