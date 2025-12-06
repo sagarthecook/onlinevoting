@@ -42,7 +42,7 @@ public class LoginService {
     @Autowired
     private EmailService emailService;
 
-    @Value("${opt.expiry.minutes:5}")
+    @Value("${otp.expiry.minutes:5}")
     private Long otpExpiryMinutes;
 
     private static final Logger logger = LogManager.getLogger(LoginService.class);
