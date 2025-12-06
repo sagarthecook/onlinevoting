@@ -29,10 +29,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleGenericException(IllegalArgumentException ex) {   
+    public ResponseEntity<ApiResponse<Object>> handleGenericException(Exception ex) {   
         ApiResponse<Object> response = new ApiResponse<>(false, null, 
         Collections.singletonList(ex.getMessage()));
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }   
 
 }
