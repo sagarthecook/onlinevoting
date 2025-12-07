@@ -5,10 +5,12 @@ import com.onlinevoting.exception.UserNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 
 @ControllerAdvice
@@ -25,6 +27,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handleGenericException(UserNotFoundException ex) {   
         ApiResponse<Object> response = new ApiResponse<>(false, null, 
         Collections.singletonList(ex.getMessage()));
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Object>> handleValidationException(MethodArgumentNotValidException ex) {
+        ApiResponse<Object> response = new ApiResponse<>(false, null,
+                ex.getBindingResult().getAllErrors().stream()
+                        .map(error -> error.getDefaultMessage())
+                        .toList());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
