@@ -40,7 +40,7 @@ public class UserDetailService {
           UserDetail newUserDetail = new UserDetail(userDetail.getFirstName(), userDetail.getLastName(),
                     userDetail.getMiddleName(), userDetail.getEmailId(), userDetail.getPhoneNo(),
                     userDetail.getAddress(),
-                    userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getPhoto());
+                    userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getPhoto(), userDetail.getRole());
 
           newUserDetail.setActive(false);
           newUserDetail.setStatus(Status.PENDING.getDisplayName());
