@@ -38,6 +38,10 @@ public class UserDetail extends AuditDetail {
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
+    @OneToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private UserRole role;
+
     @NotNull(message = "Date of birth is required")
     @Column(name = "dob", nullable = false)
     private Date dob;

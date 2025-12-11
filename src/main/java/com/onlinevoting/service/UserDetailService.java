@@ -47,12 +47,12 @@ public class UserDetailService {
 
           UserDetail uDetails = userDetailRepository.save(newUserDetail);
           // Send welcome email
-          // try {
-          //      emailService.sendEmailWithTemplate(userDetail.getEmailId(), EmailConstants.WELCOME_SUBJECT,
-          //                EmailConstants.USER_CREATE_TEMPLATE, Map.of("name", userDetail.getFirstName()));
-          // } catch (Exception e) {
-          //      e.printStackTrace();
-          // }
+          try {
+               emailService.sendEmailWithTemplate(userDetail.getEmailId(), EmailConstants.WELCOME_SUBJECT,
+                         EmailConstants.USER_CREATE_TEMPLATE, Map.of("name", userDetail.getFirstName()));
+          } catch (Exception e) {
+               e.printStackTrace();
+          }
           return uDetails;
      }
      
