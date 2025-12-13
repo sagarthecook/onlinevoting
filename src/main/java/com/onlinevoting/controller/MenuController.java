@@ -2,6 +2,9 @@ package com.onlinevoting.controller;
 
 import com.onlinevoting.dto.MenuDto;
 import com.onlinevoting.service.MenuService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,12 @@ public class MenuController {
     @GetMapping(path="/v1/menu/role/{roleId}", produces = "application/json")
     public ResponseEntity<List<MenuDto>> getMenuByRole(@PathVariable Long roleId) {
         List<MenuDto> roleMenuItems = menuService.getMenuItemsByRoleId(roleId);
+        return ResponseEntity.ok(roleMenuItems);
+    }
+
+    @GetMapping(path="/v1/menu/user/{emailId}", produces = "application/json")
+    public ResponseEntity<List<MenuDto>> getMenuByRole(@PathVariable String emailId) {
+        List<MenuDto> roleMenuItems = menuService.getMenuItemsByUserId(emailId);
         return ResponseEntity.ok(roleMenuItems);
     }
 }

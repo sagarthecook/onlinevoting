@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import com.onlinevoting.dto.MenuDto;
 import com.onlinevoting.model.Feature;
 import com.onlinevoting.model.RoleFeatureMapping;
+import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.FeatureRepository;
 import com.onlinevoting.repository.RoleFeatureMappingRepository;
 
@@ -20,10 +22,12 @@ public class MenuServiceImpl implements MenuService {
     
     private final RoleFeatureMappingRepository roleFeatureMappingRepository;
     private final FeatureRepository featureRepository;
+    private final UserDetailService userDetailService;
 
-    public MenuServiceImpl(RoleFeatureMappingRepository roleFeatureMappingRepository, FeatureRepository featureRepository) {
+    public MenuServiceImpl(RoleFeatureMappingRepository roleFeatureMappingRepository, FeatureRepository featureRepository, UserDetailService userDetailService) {
         this.roleFeatureMappingRepository = roleFeatureMappingRepository;
         this.featureRepository = featureRepository;
+        this.userDetailService = userDetailService;
     }
 
     @Override
@@ -58,6 +62,17 @@ public class MenuServiceImpl implements MenuService {
             MenuDto mainMenuDto = new MenuDto(menuId.toString(), menuIdAndNameMap.get(menuId), null, null, subMenus);
             menuDtos.add(mainMenuDto);
 
+        }
+        return menuDtos;
+    }
+
+    @Override
+    public List<MenuDto> getMenuItemsByUserId(String emailId) {
+        List<MenuDto> menuDtos = new ArrayList<>();
+       UserDetail userDetail = userDetailService.getUserByEmail(emailId);
+        if(userDetail != null) {
+            Long roleId = userDetail.getRole().getId();
+            menuDtos =  this.getMenuItemsByRoleId(roleId);
         }
         return menuDtos;
     }
