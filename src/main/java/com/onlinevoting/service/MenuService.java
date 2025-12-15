@@ -6,4 +6,5 @@ import com.onlinevoting.dto.MenuDto;
 
 public interface MenuService {
     List<MenuDto> getMenuItemsByRoleId(Long roleId);
+    List<MenuDto> getMenuItemsByUserId(String emailId);
 }
