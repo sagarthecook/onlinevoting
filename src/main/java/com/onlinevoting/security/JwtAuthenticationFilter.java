@@ -17,8 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.service.JwtService;
-import com.onlinevoting.service.LoginService;
 import com.onlinevoting.service.UserDetailService;
+import com.onlinevoting.util.UserContextHelper;
 
 import java.io.IOException;
 
@@ -26,11 +26,13 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailService userDetailsService;
+    private final UserContextHelper userContextHelper;
     private static final Logger logger = LogManager.getLogger(JwtAuthenticationFilter.class);
 
-    public JwtAuthenticationFilter(JwtService jwtService, UserDetailService userDetailsService) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailService userDetailsService, UserContextHelper userContextHelper) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.userContextHelper = userContextHelper;
     }
 
     @Override
@@ -73,6 +75,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetail userDetails = userDetailsService.getUserByEmail(username);
             if (jwtService.isTokenValid(jwt, userDetails)) {
+                // Set user context for this request
+                userContextHelper.setCurrentUserEmail(username);
+                
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, null);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -80,6 +85,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        filterChain.doFilter(request, response);
+        try {
+            filterChain.doFilter(request, response);
+        } finally {
+            // Clear user context after request completion
+            userContextHelper.clearUserContext();
+        }
     }
 }

@@ -16,6 +16,7 @@ import com.onlinevoting.model.RoleFeatureMapping;
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.FeatureRepository;
 import com.onlinevoting.repository.RoleFeatureMappingRepository;
+import com.onlinevoting.util.UserContextHelper;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -23,11 +24,14 @@ public class MenuServiceImpl implements MenuService {
     private final RoleFeatureMappingRepository roleFeatureMappingRepository;
     private final FeatureRepository featureRepository;
     private final UserDetailService userDetailService;
+    private final UserContextHelper userContextHelper;
 
-    public MenuServiceImpl(RoleFeatureMappingRepository roleFeatureMappingRepository, FeatureRepository featureRepository, UserDetailService userDetailService) {
+    public MenuServiceImpl(RoleFeatureMappingRepository roleFeatureMappingRepository, FeatureRepository featureRepository, 
+                          UserDetailService userDetailService, UserContextHelper userContextHelper) {
         this.roleFeatureMappingRepository = roleFeatureMappingRepository;
         this.featureRepository = featureRepository;
         this.userDetailService = userDetailService;
+        this.userContextHelper = userContextHelper;
     }
 
     @Override
@@ -75,6 +79,15 @@ public class MenuServiceImpl implements MenuService {
             menuDtos =  this.getMenuItemsByRoleId(roleId);
         }
         return menuDtos;
+    }
+
+    @Override
+    public List<MenuDto> getMenuItemsForCurrentUser() {
+        String emailId = userContextHelper.getCurrentUserEmail();
+        if (emailId == null || emailId.isEmpty()) {
+            throw new IllegalStateException("No user context found. User must be authenticated.");
+        }
+        return getMenuItemsByUserId(emailId);
     }
     
     private MenuDto convertToMenuDto(Feature feature) {
