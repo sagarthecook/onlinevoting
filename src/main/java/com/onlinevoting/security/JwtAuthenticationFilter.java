@@ -43,11 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Skip JWT validation for public endpoints
         if (requestPath.contains("/v1/user/generate_otp") ||
          requestPath.contains("/v1/user/validate_otp") ||
-         requestPath.contains("/v1/cities/by-state/") ||
+         requestPath.contains("/v1/cities/by-state/list") ||
          requestPath.contains("/v1/address/") ||
          requestPath.contains("/v1/country/list") ||
-         requestPath.contains("/v1/states/by-country/") ||
-         requestPath.contains("/v1/roles/")) {
+         requestPath.contains("/v1/states/by-country/list") ||
+         requestPath.contains("/v1/roles/list")) {
             filterChain.doFilter(request, response);
             return;
         }
