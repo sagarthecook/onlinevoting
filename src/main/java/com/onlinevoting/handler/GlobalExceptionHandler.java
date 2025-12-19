@@ -5,7 +5,10 @@ import com.onlinevoting.exception.UserNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+<<<<<<< HEAD
 import org.springframework.web.bind.MethodArgumentNotValidException;
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -29,6 +32,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+<<<<<<< HEAD
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Object>> handleValidationException(MethodArgumentNotValidException ex) {
         ApiResponse<Object> response = new ApiResponse<>(false, null,
@@ -43,6 +47,13 @@ public class GlobalExceptionHandler {
         ApiResponse<Object> response = new ApiResponse<>(false, null, 
         Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+=======
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Object>> handleGenericException(IllegalArgumentException ex) {   
+        ApiResponse<Object> response = new ApiResponse<>(false, null, 
+        Collections.singletonList(ex.getMessage()));
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     }   
 
 }

@@ -25,17 +25,24 @@ public class UserOtpDetails extends AuditDetail {
 
     private boolean isOtpUsed;
 
+<<<<<<< HEAD
     public UserOtpDetails() {
         super();
     }
+=======
+    public UserOtpDetails() {}
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 
     public UserOtpDetails(UserDetail userDetail, Integer otp) {
         this.userDetail = userDetail;
         this.otp = otp;
     }
 
+<<<<<<< HEAD
    
 
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     public Long getId() {
         return id;
     }

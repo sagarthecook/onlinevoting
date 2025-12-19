@@ -36,7 +36,10 @@ public class AddressService {
     Country country = new Country();
     country.setId(inputAddress.getCountryId());
     address2.setCountryId(country);
+<<<<<<< HEAD
     address2.setActive(true);
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 
     return addressRepository.save(address2).getId();
    }    
