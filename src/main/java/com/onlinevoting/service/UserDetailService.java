@@ -190,7 +190,24 @@ public class UserDetailService {
           return userDetails;
      }
 
-     private UserDetailDTO createUserDetailDTO(Object[] obj) {
-          return new UserDetailDTO((String) obj[0], (String) obj[1], (String) obj[2], String.valueOf(obj[3]), (String) obj[4]);
-     }
+      private UserDetailDTO createUserDetailDTO(Object[] obj) {
+            String dobStr = null;
+            if (obj[5] != null && obj[5] instanceof java.sql.Date) {
+                 dobStr = obj[5].toString(); // or use a formatter if you want a specific format
+            } else if (obj[5] != null) {
+                 dobStr = obj[5].toString();
+            }
+            String adharStr = obj[6] != null ? obj[6].toString() : null;
+            return new UserDetailDTO(
+               String.valueOf(obj[0]), // id
+                 (String) obj[1], // firstName
+                 (String) obj[2], // lastName
+                 (String) obj[3], // emailid
+                 (String) obj[4], // phoneNumber
+                 dobStr,          // dateOfBirth as String
+                 adharStr,        // aadharNumber as String
+                 (String) obj[7]  // status
+            );
+      }
 }
+ 
