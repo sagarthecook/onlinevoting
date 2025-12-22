@@ -1,6 +1,7 @@
 package com.onlinevoting.service;
 
 import com.onlinevoting.constants.EmailConstants;
+import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.UserDetailDTO;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.UserDetail;
@@ -209,5 +210,20 @@ public class UserDetailService {
                  (String) obj[7]  // status
             );
       }
+
+      public List<BaseDTO> getAllUsersByRole(Long roleId) {
+          List<BaseDTO> userDetails = new ArrayList<>();
+          log.info("Fetching users with role ID: {}", roleId);
+          List<Object[]> newuserDetails = userDetailRepository.findByIsActiveAndStatusAndRoleId(
+               Boolean.TRUE, Status.APPROVED.getDisplayName(), roleId);
+          for (Object[] obj : newuserDetails) {
+               userDetails.add(new BaseDTO(
+                    obj[0] != null ? Long.parseLong(obj[0].toString()) : null,
+                    obj[1] != null ? obj[1].toString() : null
+               ));
+          }
+          log.info("Found {} users with role ID: {}", userDetails.size(), roleId);
+          return userDetails;
+     }
 }
  
