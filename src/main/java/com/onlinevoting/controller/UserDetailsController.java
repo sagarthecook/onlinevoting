@@ -8,18 +8,15 @@ import jakarta.validation.Valid;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinevoting.dto.ApiResponse;
+import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.dto.UserDetailDTO;
-import com.onlinevoting.enums.Status;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-<<<<<<< HEAD
 import org.springframework.web.bind.annotation.CrossOrigin;
-=======
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,10 +29,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-<<<<<<< HEAD
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-=======
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 public class UserDetailsController {
 
     @Autowired
@@ -43,22 +37,12 @@ public class UserDetailsController {
 
     @PostMapping(path = "/v1/user_detail", consumes = { "multipart/form-data" })
     public ResponseEntity<ApiResponse<UserDetail>> createUser(
-<<<<<<< HEAD
             @RequestPart("user") @Valid String userDetailStr) throws Exception {
         UserDetail detail = new ObjectMapper().readValue(userDetailStr, UserDetail.class);
         // detail.setPhoto(profilePhoto);
         UserDetail savedUser = userDetailService.saveUser(detail);
         ApiResponse<UserDetail> response = new ApiResponse<>(true, savedUser, null);
         return new ResponseEntity(response, null, 201);
-=======
-            @RequestPart("user") @Valid String userDetailStr,
-            @RequestPart("photo") byte[] profilePhoto) throws Exception {
-        UserDetail detail = new ObjectMapper().readValue(userDetailStr, UserDetail.class);
-        detail.setPhoto(profilePhoto);
-        UserDetail savedUser = userDetailService.saveUser(detail);
-        ApiResponse<UserDetail> response = new ApiResponse<>(true, savedUser, null);
-        return ResponseEntity.ok(response);
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     }
 
     // Get API by email id
@@ -90,8 +74,6 @@ public class UserDetailsController {
         return ResponseEntity.ok(response);
     }
 
-    
-
     @GetMapping(path = "/v1/user_detail/findbyStatus", produces = { "application/json"})
     public ResponseEntity<ApiResponse<List<UserDetailDTO>>> getAllPendingApprovalUsers(
         @RequestParam String status, @RequestParam String orderBy, @RequestParam String order) {
@@ -107,4 +89,12 @@ public class UserDetailsController {
         return ResponseEntity.ok(response);
     }
     
+
+    @GetMapping(path = "/v1/user/getAllUsersByRole/{roleId}", produces = { "application/json"})
+    public ResponseEntity<ApiResponse<List<BaseDTO>>> getAllUsersByRole(@PathVariable Long roleId) {
+        List<BaseDTO> userDetails = userDetailService.getAllUsersByRole(roleId);
+        ApiResponse<List<BaseDTO>> response = new ApiResponse<>(true, userDetails, null);
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -5,23 +5,14 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-<<<<<<< HEAD
 import java.util.HashMap;
-=======
-import java.time.ZoneOffset;
-import java.util.HashMap;
-import java.util.Map;
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Value;
-=======
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
@@ -49,12 +40,9 @@ public class LoginService {
     @Autowired
     private EmailService emailService;
 
-<<<<<<< HEAD
     @Value("${otp.expiry.minutes:5}")
     private Long otpExpiryMinutes;
 
-=======
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     private static final Logger logger = LogManager.getLogger(LoginService.class);
 
     /**
@@ -115,11 +103,7 @@ public class LoginService {
         LocalDateTime currentDateTime  = LocalDateTime.now();
         LocalDateTime exDateTime  = LocalDateTime.ofInstant(Instant.ofEpochMilli(expiryTime), ZoneId.systemDefault());
        long diffMinutes = Duration.between(exDateTime,currentDateTime ).toMinutes();
-<<<<<<< HEAD
        return Long.valueOf(diffMinutes) >= otpExpiryMinutes;
-=======
-       return Long.valueOf(diffMinutes) >= 5;
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     }
 
 

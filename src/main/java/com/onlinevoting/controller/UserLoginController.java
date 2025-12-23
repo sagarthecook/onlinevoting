@@ -9,22 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onlinevoting.dto.ApiResponse;
 import com.onlinevoting.dto.UserLoginDTO;
 import com.onlinevoting.dto.UserLoginInfo;
-<<<<<<< HEAD
 import com.onlinevoting.service.JwtService;
 import com.onlinevoting.service.LoginService;
 
 import jakarta.servlet.http.HttpServletRequest;
-=======
-import com.onlinevoting.service.LoginService;
-
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserLoginController {
 
-<<<<<<< HEAD
     private final LoginService loginService;
     private final JwtService jwtService;
 
@@ -32,11 +26,6 @@ public class UserLoginController {
         this.loginService = loginService;
         this.jwtService = jwtService;
     }
-=======
-    @Autowired
-    private LoginService loginService;
-
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 
     @PostMapping("/v1/user/generate_otp")
     public ResponseEntity<ApiResponse> genrateOtp(@RequestBody @Valid UserLoginInfo userLoginInfo) {
@@ -47,14 +36,10 @@ public class UserLoginController {
     @PostMapping("/v1/user/validate_otp") 
     public ResponseEntity<ApiResponse> loginUser(@RequestBody @Valid UserLoginDTO userLoginInfDto) {
         Boolean isLoginSuccess = loginService.loginUser(userLoginInfDto);
-<<<<<<< HEAD
         if(isLoginSuccess) {
             String token = jwtService.generateToken(userLoginInfDto.getUserId());
             return ResponseEntity.ok(new ApiResponse<>(isLoginSuccess, token ,null,"Login Successfully..."));
         }
         return ResponseEntity.ok(new ApiResponse<>(isLoginSuccess,"" ,null,"Login Failed"));
-=======
-        return ResponseEntity.ok(new ApiResponse<>(isLoginSuccess,"token" ,null,"Login Successfully"));
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     }
 }
