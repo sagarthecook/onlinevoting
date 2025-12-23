@@ -1,14 +1,18 @@
 package com.onlinevoting.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinevoting.dto.ApiResponse;
-import com.onlinevoting.model.Election;
+import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.service.ElectionService;
 
 import jakarta.validation.Valid;
@@ -29,4 +33,21 @@ public class ElectionController {
         ApiResponse<Object> response = new ApiResponse<>(true, "Election created successfully", null);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @GetMapping(path="/v1/election", produces = "application/json")
+    public ResponseEntity<ApiResponse<List<ElectionResponseDto>>> getAllElections() {
+        List<ElectionResponseDto> elections = electionService.getAllElections();
+        ApiResponse<List<ElectionResponseDto>> response = new ApiResponse<>(true, elections, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/v1/election/findbyStatus", produces = { "application/json"})
+    public ResponseEntity<ApiResponse<List<ElectionResponseDto>>> getElectionsByStatus(
+        @RequestParam String status) {
+        List<ElectionResponseDto> elections = electionService.getElectionsByStatus(status);
+        ApiResponse<List<ElectionResponseDto>> response = new ApiResponse<>(true, elections, null);
+        return ResponseEntity.ok(response);
+    }
+    
 }
+ 
