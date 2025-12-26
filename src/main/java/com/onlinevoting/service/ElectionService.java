@@ -8,7 +8,6 @@ import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Election;
 import com.onlinevoting.repository.ElectionRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,9 +16,18 @@ public class ElectionService {
 
     private final ElectionRepository electionRepository;
     private final ObjectMapper objectMapper;
+    private final CountryService countryService;
+    private final StateService stateService;
+    private final CityService cityService;
+    private final UserDetailService userDetailService;
 
-    public ElectionService(ElectionRepository electionRepository) {
+    public ElectionService(ElectionRepository electionRepository, CountryService countryService, 
+        StateService stateService, CityService cityService, UserDetailService userDetailService) {
         this.electionRepository = electionRepository;
+        this.countryService = countryService;
+        this.stateService = stateService;
+        this.cityService = cityService;
+        this.userDetailService = userDetailService;
         this.objectMapper = new ObjectMapper();
         // Configure ObjectMapper to handle LocalDate properly
         this.objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
@@ -45,38 +53,40 @@ public class ElectionService {
             .collect(Collectors.toList());
     }
 
+
+    public void approveElection(Long electionId, String status) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+
+        election.setStatus(status);
+        electionRepository.save(election);
+    }
+
     public List<ElectionResponseDto> getElectionsByStatus(String status) {
         if (status == null || status.isBlank()) {
             throw new IllegalArgumentException("Status parameter is required.");
         }
 
-        String normalizedStatus = normalizeStatus(status);
 
-        return electionRepository.findAll().stream()
-            .filter(e -> normalizedStatus.equalsIgnoreCase(e.getStatus()))
+        return electionRepository.findByStatus(status).stream()
             .map(this::toDto)
             .collect(Collectors.toList());
     }
 
-    private String normalizeStatus(String status) {
-        for (Status s : Status.values()) {
-            if (s.getDisplayName().equalsIgnoreCase(status)) {
-                return s.getDisplayName();
-            }
-        }
-        throw new IllegalArgumentException("Invalid status. Allowed values: Pending, Approved, Rejected");
-    }
-
     private ElectionResponseDto toDto(Election election) {
+        String countryName = countryService.getById(election.getCountry().getId()).getName();
+        String stateName = stateService.getById(election.getState().getId()).getName();
+        String cityName = cityService.getById( election.getCity().getId()).getName();
+        String officerName = userDetailService.getUserById(election.getOfficer().getId()).getFullName();
         return new ElectionResponseDto(
             election.getElectionId(),
             election.getElectionName(),
             election.getElectionDate(),
             election.getResultDate(),
-            election.getCountry() != null ? election.getCountry().getId() : null,
-            election.getState() != null ? election.getState().getId() : null,
-            election.getCity() != null ? election.getCity().getId() : null,
-            election.getOfficer() != null ? election.getOfficer().getId() : null,
+            countryName,
+            stateName,
+             cityName,
+            officerName,
             election.getStatus()
         );
     }

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinevoting.dto.ApiResponse;
 import com.onlinevoting.dto.ElectionResponseDto;
+import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.service.ElectionService;
 
 import jakarta.validation.Valid;
@@ -41,13 +44,23 @@ public class ElectionController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(path = "/v1/election/findbyStatus", produces = { "application/json"})
+    @GetMapping(path = "/v1/election/findbystatus", produces = { "application/json"})
     public ResponseEntity<ApiResponse<List<ElectionResponseDto>>> getElectionsByStatus(
         @RequestParam String status) {
         List<ElectionResponseDto> elections = electionService.getElectionsByStatus(status);
         ApiResponse<List<ElectionResponseDto>> response = new ApiResponse<>(true, elections, null);
         return ResponseEntity.ok(response);
     }
+
+
+    @PatchMapping(path = "/v1/election/approve/{electionId}", consumes = { "application/json" }, produces = { "application/json" }  )
+    public ResponseEntity<ApiResponse<String>> approveUser(@PathVariable Long electionId, 
+        @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
+        electionService.approveElection(electionId, statusUpdateRequest.getStatus());
+        ApiResponse<String> response = new ApiResponse<>(true, "Election " + statusUpdateRequest.getStatus().toLowerCase() + " successfully", null);
+        return ResponseEntity.ok(response);
+    }
+    
     
 }
  

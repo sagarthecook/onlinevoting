@@ -8,9 +8,9 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 (6, 'Audit Logs', 'View audit trails', 1, 'Admin Panel', '/admin/logs', 'fas fa-file-alt', 1),
 
 -- Election Officer Features
-(7, 'Election Management', 'Manage elections', 2, 'Election Management', '/officer/elections', 'fas fa-vote-yea', 1),
+(7, 'Election Creation', 'Manage elections', 2, 'Election Management', 'create_election', 'fas fa-vote-yea', 1),
 (8, 'Candidate Management', 'Manage candidates', 2, 'Election Management', '/officer/candidates', 'fas fa-user-tie', 1),
-(9, 'Voter Verification', 'Verify voter eligibility', 2, 'Election Management', '/officer/verify-voters', 'fas fa-user-check', 1),
+(9, 'Voter Verification', 'Verify voter eligibility', 2, 'Election Management', 'voter_verification', 'fas fa-user-check', 1),
 (10, 'Election Results', 'View and manage results', 2, 'Election Management', '/officer/results', 'fas fa-trophy', 1),
 (11, 'Election Statistics', 'View election statistics', 2, 'Election Management', '/officer/statistics', 'fas fa-chart-pie', 1),
 
