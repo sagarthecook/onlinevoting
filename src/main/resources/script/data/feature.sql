@@ -13,6 +13,7 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 (9, 'Voter Verification', 'Verify voter eligibility', 2, 'Election Management', 'voter_verification', 'fas fa-user-check', 1),
 (10, 'Election Results', 'View and manage results', 2, 'Election Management', '/officer/results', 'fas fa-trophy', 1),
 (11, 'Election Statistics', 'View election statistics', 2, 'Election Management', '/officer/statistics', 'fas fa-chart-pie', 1),
+(23, 'Election Verification', 'Election Verification', 2, 'Election Management', 'election_verification', 'fas fa-chart-pie', 1),
 
 -- Voter Features
 (12, 'Vote', 'Cast your vote', 3, 'Voter Portal', '/voter/vote', 'fas fa-check-square', 1),
