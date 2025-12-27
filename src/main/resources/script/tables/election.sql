@@ -6,6 +6,7 @@ CREATE TABLE `election` (
   `update_by` varchar(255) DEFAULT NULL,
   `updated_date` datetime(6) DEFAULT NULL,
   `election_date` date NOT NULL,
+  'form_end_date' date NOT NULL,
   `election_name` varchar(255) NOT NULL,
   `result_date` date NOT NULL,
   `status` varchar(50) NOT NULL,
