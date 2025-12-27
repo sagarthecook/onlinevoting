@@ -53,7 +53,7 @@ public class ElectionController {
     }
 
 
-    @PatchMapping(path = "/v1/election/approve/{electionId}", consumes = { "application/json" }, produces = { "application/json" }  )
+    @PatchMapping(path = "/v1/election/status/{electionId}", consumes = { "application/json" }, produces = { "application/json" }  )
     public ResponseEntity<ApiResponse<String>> approveUser(@PathVariable Long electionId, 
         @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
         electionService.approveElection(electionId, statusUpdateRequest.getStatus());

@@ -9,7 +9,7 @@ INSERT INTO role_feature_mapping(role_id, feature_id, is_active) VALUES
 
 
 -- Voter (role_id=3) - Voting and profile features
-(3, 12, 1), (3, 13, 1), (3, 14, 1), (3, 15, 1),
+(3, 12, 1), (3, 13, 1), (3, 14, 1), (3, 15, 1),(3, 24, 1)
 
 -- Moderator (role_id=4) - Monitoring features
 (4, 16, 1), (4, 17, 1), (4, 13, 1), (4, 14, 1),
