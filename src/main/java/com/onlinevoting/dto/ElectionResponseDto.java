@@ -16,9 +16,9 @@ public class ElectionResponseDto {
     private String electionName;
     private LocalDate electionDate;
     private LocalDate resultDate;
-    private Long countryId;
-    private Long stateId;
-    private Long cityId;
-    private Long officerId;
+    private String country;
+    private String state;
+    private String city;
+    private String officer;
     private String status;
 }
