@@ -1,7 +1,6 @@
 
 package com.onlinevoting.model;
 
-import org.hibernate.validator.constraints.UniqueElements;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +27,6 @@ public class Party extends AuditDetail {
 
     @NotBlank(message = "Party name is mandatory")
     @Column(name = "name", nullable = false, length = 255)
-    @UniqueElements
     private String name;
 
     @NotBlank(message = "Logo text is mandatory")
