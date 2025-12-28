@@ -60,7 +60,5 @@ public class ElectionController {
         ApiResponse<String> response = new ApiResponse<>(true, "Election " + statusUpdateRequest.getStatus().toLowerCase() + " successfully", null);
         return ResponseEntity.ok(response);
     }
-    
-    
 }
  
