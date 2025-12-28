@@ -21,4 +21,10 @@ public class ElectionResponseDto {
     private String city;
     private String officer;
     private String status;
+    
+    public ElectionResponseDto(Long electionId, String electionName, String status) {
+        this.electionId = electionId;
+        this.electionName = electionName;
+        this.status = status;
+    }
 }

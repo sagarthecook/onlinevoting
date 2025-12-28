@@ -39,6 +39,9 @@ public class ElectionService {
             Election electionObject = objectMapper.readValue(election, Election.class);
             electionObject.setActive(true);
             electionObject.setStatus(Status.PENDING.getDisplayName());
+            if(electionObject.getElectionDate().isBefore(electionObject.getFormEndDate())) {
+                throw new IllegalArgumentException("Form filling is valid only before Election");
+            }
             // Save the election object to database
             return electionRepository.save(electionObject);
             
@@ -68,9 +71,16 @@ public class ElectionService {
         }
 
 
-        return electionRepository.findByStatus(status).stream()
-            .map(this::toDto)
+        // return electionRepository.findByStatus(status).stream()
+        //     .map(this::toDto)
+        //     .collect(Collectors.toList());
+
+            return electionRepository.findElectionIdAndNameByStatus(status).stream()
+            .map(this::electiondata)
             .collect(Collectors.toList());
+
+            // return electionRepository.findElectionIdAndNameByStatus(status);
+
     }
 
     private ElectionResponseDto toDto(Election election) {
@@ -90,4 +100,13 @@ public class ElectionService {
             election.getStatus()
         );
     }
+
+        private ElectionResponseDto electiondata(ElectionResponseDto electionResponseDto) {
+        return new ElectionResponseDto(
+            electionResponseDto.getElectionId(),
+            electionResponseDto.getElectionName(),
+            electionResponseDto.getStatus()
+        );
+    
+}
 }
