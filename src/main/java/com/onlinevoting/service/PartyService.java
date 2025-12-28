@@ -1,11 +1,10 @@
 package com.onlinevoting.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.onlinevoting.dto.PartyDto;
+import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.model.Party;
 import com.onlinevoting.repository.PartyRepository;
 
@@ -18,13 +17,21 @@ public class PartyService {
         this.partyRepository = partyRepository;
     }
 
-    public Party Save(Party party) {
-        if (party.getIsActive() == null) {
-            party.setActive(Boolean.TRUE); 
-        }
+    public Party save(Party party) {
+        party.setActive(true);
         return partyRepository.save(party);
     }
-    public List<Party> getAllParties() {
-        return partyRepository.findAll();
+
+    public List<BaseDTO> getAllParties() {
+         // GET ALL PARTIES  
+        List<Party> parties = partyRepository.findByIsActiveTrue();
+
+        //  CONVERT TO BaseDTO
+          List<BaseDTO> partyDtos = parties.stream().map(party -> new BaseDTO(
+              party.getId(),
+              party.getName()
+          )).toList();
+
+          return partyDtos;
     }
 }

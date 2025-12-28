@@ -1,6 +1,8 @@
 
 package com.onlinevoting.model;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,19 +16,20 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "party")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Party extends AuditDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "party_id")
-    private Long partyId;
+    @Column(name = "id")
+    private Long id;
 
     @NotBlank(message = "Party name is mandatory")
-    @Column(name = "party_name", nullable = false, length = 255)
-    private String partyName;
+    @Column(name = "name", nullable = false, length = 255)
+    @UniqueElements
+    private String name;
 
     @NotBlank(message = "Logo text is mandatory")
     @Column(name = "logo_text", nullable = false, columnDefinition = "TEXT")
