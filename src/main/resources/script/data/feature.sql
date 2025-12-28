@@ -21,6 +21,7 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 (14, 'Election Info', 'View election information', 3, 'Voter Portal', '/voter/elections', 'fas fa-info-circle', 1),
 (15, 'Voting History', 'View voting history', 3, 'Voter Portal', '/voter/history', 'fas fa-history', 1),
 (24, 'Party', 'Add Party', 3, 'Voter Portal', 'party', 'fas fa-history', 1),
+(25, 'Candidate Form', 'Add Candidate', 3, 'Voter Portal', 'candidate_form', 'fas fa-history', 1),
 
 -- Moderator Features
 (16, 'Monitor Voting', 'Monitor ongoing elections', 4, 'Moderator Panel', '/moderator/monitor', 'fas fa-eye', 1),
