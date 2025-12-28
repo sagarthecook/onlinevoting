@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinevoting.dto.ApiResponse;
+import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.service.ElectionService;
@@ -49,6 +50,13 @@ public class ElectionController {
         @RequestParam String status) {
         List<ElectionResponseDto> elections = electionService.getElectionsByStatus(status);
         ApiResponse<List<ElectionResponseDto>> response = new ApiResponse<>(true, elections, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/v1/election/approved", produces = { "application/json"})
+    public ResponseEntity<ApiResponse<List<BaseDTO>>> getApprovedElections() {
+        List<BaseDTO> elections = electionService.getApprovedElections();
+        ApiResponse<List<BaseDTO>> response = new ApiResponse<>(true, elections, null);
         return ResponseEntity.ok(response);
     }
 

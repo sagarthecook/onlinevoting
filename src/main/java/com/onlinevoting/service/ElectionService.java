@@ -3,6 +3,7 @@ package com.onlinevoting.service;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Election;
@@ -39,8 +40,11 @@ public class ElectionService {
             Election electionObject = objectMapper.readValue(election, Election.class);
             electionObject.setActive(true);
             electionObject.setStatus(Status.PENDING.getDisplayName());
-            if(electionObject.getElectionDate().isBefore(electionObject.getFormEndDate())) {
-                throw new IllegalArgumentException("Form filling is valid only before Election");
+            if(electionObject.getElectionDate().isAfter(electionObject.getResultDate())) {
+                throw new IllegalArgumentException("Election date must be before result date.");
+            }
+            if(electionObject.getFormEndDate().isAfter(electionObject.getElectionDate())) {
+                throw new IllegalArgumentException("Form end date must be before election date.");
             }
             // Save the election object to database
             return electionRepository.save(electionObject);
@@ -71,16 +75,17 @@ public class ElectionService {
         }
 
 
-        // return electionRepository.findByStatus(status).stream()
-        //     .map(this::toDto)
-        //     .collect(Collectors.toList());
-
-            return electionRepository.findElectionIdAndNameByStatus(status).stream()
-            .map(this::electiondata)
+        return electionRepository.findByStatus(status).stream()
+            .map(this::toDto)
             .collect(Collectors.toList());
+    }
 
-            // return electionRepository.findElectionIdAndNameByStatus(status);
+    public List<BaseDTO> getApprovedElections() {
+        List<Election> approvedElections = electionRepository.findByStatusAndIsActiveTrue(Status.APPROVED.getDisplayName());
 
+      return approvedElections.stream()
+            .map(election -> new BaseDTO(election.getElectionId(), election.getElectionName()))
+            .toList();
     }
 
     private ElectionResponseDto toDto(Election election) {
@@ -100,13 +105,4 @@ public class ElectionService {
             election.getStatus()
         );
     }
-
-        private ElectionResponseDto electiondata(ElectionResponseDto electionResponseDto) {
-        return new ElectionResponseDto(
-            electionResponseDto.getElectionId(),
-            electionResponseDto.getElectionName(),
-            electionResponseDto.getStatus()
-        );
-    
-}
 }
