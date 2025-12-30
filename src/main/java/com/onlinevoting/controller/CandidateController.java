@@ -22,7 +22,7 @@ public class CandidateController {
     @Autowired
     private CandidateService candidateService;
 
-      @PostMapping(path="/v1/candidate", consumes = "application/json", produces = "application/json")
+    @PostMapping(path="/v1/candidate_form", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ApiResponse<Object>> createCandidate(@RequestBody @Valid Candidate candidate) {
         candidateService.saveCandidate(candidate);
         ApiResponse<Object> response = new ApiResponse<>(true, "Candidate created successfully", null);

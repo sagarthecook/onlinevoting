@@ -84,7 +84,7 @@ public class ElectionService {
         List<Election> approvedElections = electionRepository.findByStatusAndIsActiveTrue(Status.APPROVED.getDisplayName());
 
       return approvedElections.stream()
-            .map(election -> new BaseDTO(election.getElectionId(), election.getElectionName()))
+            .map(election -> new BaseDTO(election.getId(), election.getElectionName()))
             .toList();
     }
 
@@ -94,7 +94,7 @@ public class ElectionService {
         String cityName = cityService.getById( election.getCity().getId()).getName();
         String officerName = userDetailService.getUserById(election.getOfficer().getId()).getFullName();
         return new ElectionResponseDto(
-            election.getElectionId(),
+            election.getId(),
             election.getElectionName(),
             election.getElectionDate(),
             election.getResultDate(),

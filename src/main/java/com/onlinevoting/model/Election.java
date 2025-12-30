@@ -18,8 +18,8 @@ public class Election extends AuditDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "election_id")
-    private Long electionId;
+    @Column(name = "id")
+    private Long id;
 
     @NotBlank(message = "Election name is mandatory")
     @Column(name = "election_name", nullable = false, length = 255)

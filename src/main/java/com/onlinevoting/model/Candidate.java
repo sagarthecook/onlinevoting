@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
-@Table(name = "candidate")
+@Table(name = "candidate_form")
 @Data
 public class Candidate extends AuditDetail {
 
@@ -39,7 +39,7 @@ public class Candidate extends AuditDetail {
 
     @NotNull(message="Income is mandatory")
     @Column(name = "income", nullable = false)
-    private Double income;
+    private String income;
 
     @NotNull(message = "Party is mandatory")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,7 +49,7 @@ public class Candidate extends AuditDetail {
 
     @NotNull(message = "Election is mandatory")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "election_id", referencedColumnName = "election_id")
+    @JoinColumn(name = "election_id", referencedColumnName = "id")
     private Election election;
 
 }
