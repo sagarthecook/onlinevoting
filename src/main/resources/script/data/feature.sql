@@ -6,6 +6,7 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 (4, 'System Settings', 'Configure system settings', 1, 'Admin Panel', '/admin/settings', 'fas fa-cogs', 1),
 (5, 'Reports', 'View system reports', 1, 'Admin Panel', '/admin/reports', 'fas fa-chart-bar', 1),
 (6, 'Audit Logs', 'View audit trails', 1, 'Admin Panel', '/admin/logs', 'fas fa-file-alt', 1),
+(26, 'Candidate Verification', 'Candidate Verification', 1, 'Admin Panel', 'candidate_verification', 'fas fa-tachometer-alt', 1),
 
 -- Election Officer Features
 (7, 'Election Creation', 'Manage elections', 2, 'Election Management', 'create_election', 'fas fa-vote-yea', 1),

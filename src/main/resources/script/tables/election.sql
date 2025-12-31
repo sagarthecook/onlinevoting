@@ -1,5 +1,5 @@
 CREATE TABLE `election` (
-  `election_id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `created_by` varchar(255) DEFAULT NULL,
   `created_date` datetime(6) DEFAULT NULL,
   `is_active` bit(1) DEFAULT NULL,
