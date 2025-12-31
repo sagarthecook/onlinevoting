@@ -1,4 +1,6 @@
 package com.onlinevoting.model;
+import java.sql.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -7,7 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -45,7 +49,6 @@ public class Candidate extends AuditDetail {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id", referencedColumnName = "id")
     private Party party;
-  
 
     @NotNull(message = "Election is mandatory")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,5 +58,21 @@ public class Candidate extends AuditDetail {
     @NotBlank(message = "Status is mandatory")
     @Column(name = "status", nullable = false, length = 50)
     private String status;
+
+    @OneToOne
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address wardAddress;
+
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email is required")
+    @Column(name = "email_id", nullable = false, length = 100)
+    private String emailId;
+
+    @NotNull(message = "Date of birth is required")
+    @Column(name = "dob", nullable = false)
+    private Date dob;
+
+    @Column(name = "note_for_status", length = 500)
+    private String noteForStatus;
 
 }

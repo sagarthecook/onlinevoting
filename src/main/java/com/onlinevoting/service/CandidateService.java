@@ -4,6 +4,8 @@ import com.onlinevoting.dto.CandidateResponseDTO;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Candidate;
 import com.onlinevoting.repository.CandidateRepository;
+import com.onlinevoting.util.UserContextHelper;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,26 +19,30 @@ public class CandidateService {
     private final ObjectMapper objectMapper;
     private final ElectionService electionService;
     private final PartyService partyService;
+    private UserContextHelper userContextHelper;
 
-    public CandidateService(CandidateRepository candidateRepository , ElectionService electionService, PartyService partyService) {
+    public CandidateService(CandidateRepository candidateRepository , ElectionService electionService, 
+        PartyService partyService, UserContextHelper userContextHelper) {
         this.candidateRepository = candidateRepository;
         this.electionService = electionService;
         this.partyService = partyService;
+        this.userContextHelper = userContextHelper;
         this.objectMapper = new ObjectMapper();
         // Configure ObjectMapper to handle LocalDate properly
         this.objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
     }
   
     public Candidate saveCandidate(String candidate) {
-       try{ Candidate candidateObj = objectMapper.readValue(candidate, Candidate.class);
+       try { 
+        Candidate candidateObj = objectMapper.readValue(candidate, Candidate.class);
         candidateObj.setActive(true);
         candidateObj.setStatus(Status.PENDING.getDisplayName());
-    
+        candidateObj.setEmailId(userContextHelper.getCurrentUserEmail());
         return candidateRepository.save(candidateObj);
-    }
-    catch (JsonProcessingException e) {
-        throw new RuntimeException("Failed to parse candidate JSON: " + e.getMessage(), e);
-    }
+        }
+        catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse candidate JSON: " + e.getMessage(), e);
+        }
     }
 
     public List<CandidateResponseDTO> getCandidatebyStatus(String status) {
@@ -44,10 +50,8 @@ public class CandidateService {
             throw new IllegalArgumentException("Status parameter is required.");
         }
 
-        return candidateRepository.findByStatus(status).stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-       
+        return candidateRepository.findByStatusAndIsActiveTrue(status).stream()
+                .map(this::toDto).toList();
     }
     
 
@@ -63,7 +67,10 @@ public class CandidateService {
                 candidate.getIncome(),
                 partyName,
                 electionName,
-                candidate.getStatus()
+                candidate.getStatus(),
+                candidate.getEmailId(),
+                candidate.getNoteForStatus(),
+                candidate.getDob() != null ? candidate.getDob().toString() : null
         );
     }
 }

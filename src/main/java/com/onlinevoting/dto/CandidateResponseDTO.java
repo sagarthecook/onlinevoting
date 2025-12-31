@@ -19,6 +19,8 @@ public class CandidateResponseDTO {
     private String party;
     private String election;
     private String status;
-
+    private String emailId;
+    private String noteForStatus;
+    private String dob;
 
 }

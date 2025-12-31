@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinevoting.dto.ApiResponse;
 import com.onlinevoting.dto.CandidateResponseDTO;
-import com.onlinevoting.dto.ElectionResponseDto;
-import com.onlinevoting.model.Candidate;
 import com.onlinevoting.service.CandidateService;
-import java.util.List;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
