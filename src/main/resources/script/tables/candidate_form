@@ -1,0 +1,21 @@
+CREATE TABLE `candidate_form` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  `update_by` varchar(255) DEFAULT NULL,
+  `updated_date` datetime(6) DEFAULT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `income` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `middle_name` varchar(255) NOT NULL,
+  `occupation` varchar(255) NOT NULL,
+  `status` varchar(50) NOT NULL,
+  `election_id` bigint NOT NULL,
+  `party_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKo9rj9gwtfvlkexewbvh8j7foe` (`election_id`),
+  KEY `FKgi8hdk5fafq19d357qpw1h58x` (`party_id`),
+  CONSTRAINT `FKgi8hdk5fafq19d357qpw1h58x` FOREIGN KEY (`party_id`) REFERENCES `party` (`id`),
+  CONSTRAINT `FKo9rj9gwtfvlkexewbvh8j7foe` FOREIGN KEY (`election_id`) REFERENCES `election` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

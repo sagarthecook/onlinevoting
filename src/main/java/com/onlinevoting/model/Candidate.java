@@ -52,4 +52,8 @@ public class Candidate extends AuditDetail {
     @JoinColumn(name = "election_id", referencedColumnName = "id")
     private Election election;
 
+    @NotBlank(message = "Status is mandatory")
+    @Column(name = "status", nullable = false, length = 50)
+    private String status;
+
 }
