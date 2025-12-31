@@ -6,17 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinevoting.dto.ApiResponse;
 import com.onlinevoting.dto.CandidateResponseDTO;
+import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.service.CandidateService;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -40,14 +43,18 @@ public class CandidateController {
         ApiResponse<List<CandidateResponseDTO>> response = new ApiResponse<>(true, candidates, null);
         return ResponseEntity.ok(response);
     }
-
-    
-
-
-    
-
-
-
-
-
+   @PatchMapping(path = "/v1/candidate/status/{candidateId}", consumes = { "application/json" }, produces = { "application/json" }  )
+    public ResponseEntity<ApiResponse<String>> approveUser(@PathVariable Long candidateId, 
+        @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
+        candidateService.approvedcandidate(candidateId, statusUpdateRequest.getStatus());
+        ApiResponse<String> response = new ApiResponse<>(true, "Election " + statusUpdateRequest.getStatus().toLowerCase() + " successfully", null);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping(path = "/v1/candidate/approved", produces = { "application/json"})
+    public ResponseEntity<ApiResponse<List<CandidateResponseDTO>>> getApprovedCandidate() {
+        List<CandidateResponseDTO> candidates = candidateService.getCandidatesByStatus("APPROVED");
+        ApiResponse<List<CandidateResponseDTO>> response = new ApiResponse<>(true, candidates, null);
+        return ResponseEntity.ok(response);
+    }
 }
+
