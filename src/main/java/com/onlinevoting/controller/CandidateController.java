@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinevoting.dto.ApiResponse;
 import com.onlinevoting.dto.CandidateResponseDTO;
+import com.onlinevoting.dto.StatusRequestDTO;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.service.CandidateService;
 
@@ -39,14 +40,14 @@ public class CandidateController {
 
     @GetMapping(path = "/v1/candidate_form/findbystatus", produces = { "application/json" })
     public ResponseEntity<ApiResponse<List<CandidateResponseDTO>>> getCandidatesByStatus(@RequestParam String status) {
-        List<CandidateResponseDTO> candidates = candidateService.getCandidatebyStatus(status);
+        List<CandidateResponseDTO> candidates = candidateService.getCandidatesByStatus(status);
         ApiResponse<List<CandidateResponseDTO>> response = new ApiResponse<>(true, candidates, null);
         return ResponseEntity.ok(response);
     }
-   @PatchMapping(path = "/v1/candidate/status/{candidateId}", consumes = { "application/json" }, produces = { "application/json" }  )
+   @PatchMapping(path = "/v1/candidate/updatestatus/{candidateId}", consumes = { "application/json" }, produces = { "application/json" }  )
     public ResponseEntity<ApiResponse<String>> approveUser(@PathVariable Long candidateId, 
-        @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
-        candidateService.approvedcandidate(candidateId, statusUpdateRequest.getStatus());
+        @RequestBody StatusRequestDTO statusUpdateRequest ) {
+        candidateService.updateStatusOfCandidate(candidateId, statusUpdateRequest.getStatus(),statusUpdateRequest.getNoteForStatus()    );
         ApiResponse<String> response = new ApiResponse<>(true, "Election " + statusUpdateRequest.getStatus().toLowerCase() + " successfully", null);
         return ResponseEntity.ok(response);
     }

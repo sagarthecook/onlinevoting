@@ -18,15 +18,10 @@ public class CandidateService {
 
     private final CandidateRepository candidateRepository;
     private final ObjectMapper objectMapper;
-    private final ElectionService electionService;
-    private final PartyService partyService;
     private UserContextHelper userContextHelper;
 
-    public CandidateService(CandidateRepository candidateRepository , ElectionService electionService, 
-        PartyService partyService, UserContextHelper userContextHelper) {
+    public CandidateService(CandidateRepository candidateRepository, UserContextHelper userContextHelper) {
         this.candidateRepository = candidateRepository;
-        this.electionService = electionService;
-        this.partyService = partyService;
         this.userContextHelper = userContextHelper;
         this.objectMapper = new ObjectMapper();
         // Configure ObjectMapper to handle LocalDate properly
@@ -36,7 +31,7 @@ public class CandidateService {
     public Candidate saveCandidate(String candidate) {
        try { 
         Candidate candidateObj = objectMapper.readValue(candidate, Candidate.class);
-        candidateObj.setActive(true);
+        candidateObj.setActive(false);
         candidateObj.setStatus(Status.PENDING.getDisplayName());
         candidateObj.setEmailId(userContextHelper.getCurrentUserEmail());
         return candidateRepository.save(candidateObj);
@@ -51,15 +46,16 @@ public class CandidateService {
             throw new IllegalArgumentException("Status parameter is required.");
         }
 
-        return candidateRepository.findByStatusAndIsActiveTrue(status).stream()
+        return candidateRepository.findByStatus(status).stream()
                 .map(this::toDto).toList();
     }
     
 
-    public void approvedcandidate(Long candidateId, String status) {
+    public void updateStatusOfCandidate(Long candidateId, String status,String noteForStatus) {
          Candidate candidate = candidateRepository.findById(candidateId)
                  .orElseThrow(() -> new IllegalArgumentException("Candidate not found with id: " + candidateId));        
          candidate.setStatus(status);
+         candidate.setNoteForStatus(noteForStatus);
          candidateRepository.save(candidate);
      }
 
@@ -67,7 +63,7 @@ public class CandidateService {
         if (status == null || status.isBlank()) {
             throw new IllegalArgumentException("Status parameter is required.");
         }       
-        return candidateRepository.findByStatusAndIsActiveTrue(status).stream()
+        return candidateRepository.findByStatus(status).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
