@@ -56,6 +56,15 @@ public class UserDetailService {
           }
           return uDetails;
      }
+
+     public List<UserDetail> findUsersByPhone(String phone) {
+          return userDetailRepository.findByPhoneNo(phone);
+     }
+
+
+     public List<UserDetail> findUsersByEmail(String email) {
+          return userDetailRepository.findByEmail(email);
+     }
      
      public void approveUser(Long id, String status) {
 

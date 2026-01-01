@@ -23,6 +23,12 @@ public interface UserDetailRepository extends JpaRepository<UserDetail, Long> {
 
     @Query("SELECT userDetail.id, CONCAT(userDetail.firstName, ' ', userDetail.lastName) FROM UserDetail userDetail WHERE userDetail.isActive = :isActive AND userDetail.status = :status AND userDetail.role.id = :roleId")
     List<Object[]> findByIsActiveAndStatusAndRoleId(Boolean isActive, String status, Long roleId);
+    
+    @Query("SELECT u FROM UserDetail u WHERE u.phoneNo = :phoneNo")
+    List<UserDetail> findByPhoneNo(String phoneNo);
+
+    @Query("SELECT u FROM UserDetail u WHERE u.emailId = :emailId")
+    List<UserDetail> findByEmail(String emailId);
 }
 
 
