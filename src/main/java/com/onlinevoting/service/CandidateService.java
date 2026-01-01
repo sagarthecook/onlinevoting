@@ -36,7 +36,7 @@ public class CandidateService {
     public Candidate saveCandidate(String candidate) {
        try { 
         Candidate candidateObj = objectMapper.readValue(candidate, Candidate.class);
-        candidateObj.setActive(true);
+        candidateObj.setActive(false);
         candidateObj.setStatus(Status.PENDING.getDisplayName());
         candidateObj.setEmailId(userContextHelper.getCurrentUserEmail());
         return candidateRepository.save(candidateObj);
@@ -51,29 +51,56 @@ public class CandidateService {
             throw new IllegalArgumentException("Status parameter is required.");
         }
 
-        return candidateRepository.findByStatusAndIsActiveTrue(status).stream()
+        return candidateRepository.findByStatus(status).stream()
                 .map(this::toDto).toList();
     }
     
 
-    public void approvedcandidate(Long candidateId, String status) {
+    public void updateStatusOfcandidate(Long candidateId, String status,String noteForStatus) {
          Candidate candidate = candidateRepository.findById(candidateId)
                  .orElseThrow(() -> new IllegalArgumentException("Candidate not found with id: " + candidateId));        
          candidate.setStatus(status);
+         candidate.setActive(Boolean.TRUE);
+         candidate.setNoteForStatus(noteForStatus);
          candidateRepository.save(candidate);
-     }
-
-    public List<CandidateResponseDTO> getCandidatesByStatus(String status) {
-        if (status == null || status.isBlank()) {
-            throw new IllegalArgumentException("Status parameter is required.");
-        }       
-        return candidateRepository.findByStatusAndIsActiveTrue(status).stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        
+        // Send email notification using template
+        sendStatusUpdateEmail(candidate, status, noteForStatus);
     }
 
+    private void sendStatusUpdateEmail(Candidate candidate, String status, String noteForStatus) {
+        // TODO: Implement email service integration
+        // This method should use EmailService to send template-based email
+        // Example implementation would look like:
+        // emailService.sendTemplateEmail(
+        //     candidate.getEmailId(),
+        //     "Candidate Application Status Update",
+        //     "candidate_status_update",
+        //     createEmailTemplateData(candidate, status, noteForStatus)
+        // );
+    }
 
-    private CandidateResponseDTO toDto(Candidate candidate) {
+    private java.util.Map<String, Object> createEmailTemplateData(Candidate candidate, String status, String noteForStatus) {
+        java.util.Map<String, Object> templateData = new java.util.HashMap<>();
+        templateData.put("candidateFirstName", candidate.getFirstName());
+        templateData.put("candidateMiddleName", candidate.getMiddleName());
+        templateData.put("candidateLastName", candidate.getLastName());
+        templateData.put("candidateEmail", candidate.getEmailId());
+        templateData.put("status", status);
+        templateData.put("noteForStatus", noteForStatus);
+        templateData.put("statusUpdateDate", java.time.LocalDateTime.now().toString());
+        
+        if (candidate.getParty() != null) {
+            templateData.put("partyName", candidate.getParty().getName());
+        }
+        if (candidate.getElection() != null) {
+            templateData.put("electionName", candidate.getElection().getElectionName());
+        }
+        
+        return templateData;
+    }
+    
+     private CandidateResponseDTO toDto(Candidate candidate) {
         String partyName = candidate.getParty().getId() != null ? candidate.getParty().getName().toString() : null;
         String electionName = candidate.getElection() != null ? candidate.getElection().getElectionName() : null;
         return new CandidateResponseDTO(

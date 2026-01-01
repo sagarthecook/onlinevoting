@@ -9,5 +9,6 @@ import java.util.List;
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     public List<Candidate> findByStatusAndIsActiveTrue(String status);
+    public List<Candidate> findByStatus(String status);
 
 }
