@@ -1,16 +1,17 @@
 package com.onlinevoting.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinevoting.dto.CandidateResponseDTO;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Candidate;
 import com.onlinevoting.repository.CandidateRepository;
 import com.onlinevoting.util.UserContextHelper;
-
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
                                                         
 @Service
 public class CandidateService {
@@ -54,6 +55,23 @@ public class CandidateService {
                 .map(this::toDto).toList();
     }
     
+
+    public void approvedcandidate(Long candidateId, String status) {
+         Candidate candidate = candidateRepository.findById(candidateId)
+                 .orElseThrow(() -> new IllegalArgumentException("Candidate not found with id: " + candidateId));        
+         candidate.setStatus(status);
+         candidateRepository.save(candidate);
+     }
+
+    public List<CandidateResponseDTO> getCandidatesByStatus(String status) {
+        if (status == null || status.isBlank()) {
+            throw new IllegalArgumentException("Status parameter is required.");
+        }       
+        return candidateRepository.findByStatusAndIsActiveTrue(status).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
 
     private CandidateResponseDTO toDto(Candidate candidate) {
         String partyName = candidate.getParty().getId() != null ? candidate.getParty().getName().toString() : null;
