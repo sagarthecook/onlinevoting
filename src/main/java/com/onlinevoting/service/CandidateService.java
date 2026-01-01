@@ -12,6 +12,10 @@ import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Candidate;
 import com.onlinevoting.repository.CandidateRepository;
 import com.onlinevoting.util.UserContextHelper;
+
+import freemarker.template.TemplateException;
+import jakarta.mail.MessagingException;
+import java.io.IOException;
                                                         
 @Service
 public class CandidateService {
@@ -20,13 +24,15 @@ public class CandidateService {
     private final ObjectMapper objectMapper;
     private final ElectionService electionService;
     private final PartyService partyService;
+    private final EmailService emailService;
     private UserContextHelper userContextHelper;
 
     public CandidateService(CandidateRepository candidateRepository , ElectionService electionService, 
-        PartyService partyService, UserContextHelper userContextHelper) {
+        PartyService partyService, EmailService emailService, UserContextHelper userContextHelper) {
         this.candidateRepository = candidateRepository;
         this.electionService = electionService;
         this.partyService = partyService;
+        this.emailService = emailService;
         this.userContextHelper = userContextHelper;
         this.objectMapper = new ObjectMapper();
         // Configure ObjectMapper to handle LocalDate properly
@@ -69,15 +75,17 @@ public class CandidateService {
     }
 
     private void sendStatusUpdateEmail(Candidate candidate, String status, String noteForStatus) {
-        // TODO: Implement email service integration
-        // This method should use EmailService to send template-based email
-        // Example implementation would look like:
-        // emailService.sendTemplateEmail(
-        //     candidate.getEmailId(),
-        //     "Candidate Application Status Update",
-        //     "candidate_status_update",
-        //     createEmailTemplateData(candidate, status, noteForStatus)
-        // );
+        try {
+            emailService.sendEmailWithTemplate(
+                candidate.getEmailId(),
+                "Candidate Application Status Update",
+                "candidate_status_update.ftl",
+                createEmailTemplateData(candidate, status, noteForStatus)
+            );
+        } catch (MessagingException | IOException | TemplateException e) {
+            // Log the error but don't fail the status update
+            throw new RuntimeException("Failed to send status update email: " + e.getMessage(), e);
+        }
     }
 
     private java.util.Map<String, Object> createEmailTemplateData(Candidate candidate, String status, String noteForStatus) {
@@ -89,6 +97,7 @@ public class CandidateService {
         templateData.put("status", status);
         templateData.put("noteForStatus", noteForStatus);
         templateData.put("statusUpdateDate", java.time.LocalDateTime.now().toString());
+        templateData.put("applicationDate", candidate.getCreatedDate() != null ? candidate.getCreatedDate().toString() : java.time.LocalDateTime.now().toString());
         
         if (candidate.getParty() != null) {
             templateData.put("partyName", candidate.getParty().getName());
