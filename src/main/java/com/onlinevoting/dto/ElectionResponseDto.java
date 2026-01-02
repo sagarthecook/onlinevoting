@@ -2,6 +2,8 @@ package com.onlinevoting.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL) // Apply to the whole class
 public class ElectionResponseDto {
     private Long electionId;
     private String electionName;
@@ -26,5 +29,11 @@ public class ElectionResponseDto {
         this.electionId = electionId;
         this.electionName = electionName;
         this.status = status;
+    }
+    
+    public ElectionResponseDto(String coutry, String state, String city) {
+        this.country = coutry;
+        this.state = state;
+        this.city = city;
     }
 }

@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinevoting.dto.ApiResponse;
 import com.onlinevoting.dto.BaseDTO;
+import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
+import com.onlinevoting.model.Election;
 import com.onlinevoting.service.ElectionService;
 
 import jakarta.validation.Valid;
@@ -36,6 +38,13 @@ public class ElectionController {
         electionService.saveElection(election);
         ApiResponse<Object> response = new ApiResponse<>(true, "Election created successfully", null);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path="/v1/election/{electionId}", produces = "application/json")
+    public ResponseEntity<ApiResponse<ElectionAddressDTO>> getElectionById(@PathVariable Long  electionId) {
+        ElectionAddressDTO election = electionService.getElectionById(electionId);
+        ApiResponse<ElectionAddressDTO> response = new ApiResponse<>(true, election, null);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(path="/v1/election", produces = "application/json")

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.onlinevoting.dto.BaseDTO;
+import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Election;
@@ -54,6 +55,13 @@ public class ElectionService {
         }
     } 
 
+    public ElectionAddressDTO getElectionById(Long electionId) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+        return toDtoWithIdsDto(election);
+    }
+
+
     public List<ElectionResponseDto> getAllElections() {
         return electionRepository.findAll().stream()
             .map(this::toDto)
@@ -88,6 +96,13 @@ public class ElectionService {
             .toList();
     }
 
+ private ElectionAddressDTO toDtoWithIdsDto(Election election) {
+        return new ElectionAddressDTO(
+            election.getCountry().getId(),
+            election.getState().getId(),
+             election.getCity().getId()
+        );
+    }
     private ElectionResponseDto toDto(Election election) {
         String countryName = countryService.getById(election.getCountry().getId()).getName();
         String stateName = stateService.getById(election.getState().getId()).getName();
