@@ -47,6 +47,14 @@ public class ElectionController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(path="/v1/election/detail/{electionId}", produces = "application/json")
+    public ResponseEntity<ApiResponse<ElectionResponseDto>> getElectionDetails(@PathVariable Long  electionId) {
+        ElectionResponseDto election = electionService.getElectionDetails(electionId);
+        ApiResponse<ElectionResponseDto> response = new ApiResponse<>(true, election, null);
+        return ResponseEntity.ok(response);
+    }
+
+
     @GetMapping(path="/v1/election", produces = "application/json")
     public ResponseEntity<ApiResponse<List<ElectionResponseDto>>> getAllElections() {
         List<ElectionResponseDto> elections = electionService.getAllElections();
@@ -75,6 +83,14 @@ public class ElectionController {
         @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
         electionService.approveElection(electionId, statusUpdateRequest.getStatus());
         ApiResponse<String> response = new ApiResponse<>(true, "Election " + statusUpdateRequest.getStatus().toLowerCase() + " successfully", null);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping(path = "/v1/election/publish/{electionId}", consumes = { "application/json" }, produces = { "application/json" }  )
+    public ResponseEntity<ApiResponse<String>> publishElection(@PathVariable Long electionId, 
+        @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
+        electionService.publishElection(electionId,statusUpdateRequest);
+        ApiResponse<String> response = new ApiResponse<>(true, "Election published successfully", null);
         return ResponseEntity.ok(response);
     }
     

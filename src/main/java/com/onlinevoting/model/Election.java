@@ -60,4 +60,11 @@ public class Election extends AuditDetail {
     @NotBlank(message = "Status is mandatory")
     @Column(name = "status", nullable = false, length = 50)
     private String status;
+
+    @Column(name = "note", nullable = false, length = 50)
+    private String note;
+
+    @Column(name = "is_publish", nullable = false)
+    private Boolean isPublish;
+
 }

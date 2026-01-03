@@ -6,10 +6,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
+import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Election;
 import com.onlinevoting.repository.ElectionRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,16 @@ public class ElectionService {
         this.objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
     }
 
+    public void publishElection(Long electionId, StatusUpdateRequestDTO statusUpdateRequest) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+
+        election.setNote(statusUpdateRequest.getNote());
+        election.setIsPublish(statusUpdateRequest.getIsPublish());
+        // Send email notification logic can be added here
+        electionRepository.save(election);
+    }
+    
     public Election saveElection(String election) {
         try {
             // Convert JSON string to Election object
@@ -60,6 +72,13 @@ public class ElectionService {
             .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
         return toDtoWithIdsDto(election);
     }
+
+        public ElectionResponseDto getElectionDetails(Long electionId) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+        return toDto(election);
+    }
+
 
 
     public List<ElectionResponseDto> getAllElections() {
@@ -91,7 +110,7 @@ public class ElectionService {
     public List<BaseDTO> getApprovedElections() {
         List<Election> approvedElections = electionRepository.findByStatusAndIsActiveTrue(Status.APPROVED.getDisplayName());
 
-      return approvedElections.stream()
+      return approvedElections.stream().filter(e->!e.getResultDate().isBefore(LocalDate.now()))
             .map(election -> new BaseDTO(election.getId(), election.getElectionName()))
             .toList();
     }
