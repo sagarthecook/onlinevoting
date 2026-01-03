@@ -7,22 +7,34 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+<<<<<<< HEAD
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 import org.springframework.stereotype.Service;
 
 import com.onlinevoting.dto.MenuDto;
 import com.onlinevoting.model.Feature;
 import com.onlinevoting.model.RoleFeatureMapping;
+<<<<<<< HEAD
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.FeatureRepository;
 import com.onlinevoting.repository.RoleFeatureMappingRepository;
 import com.onlinevoting.util.UserContextHelper;
+<<<<<<< HEAD
+=======
+=======
+import com.onlinevoting.repository.FeatureRepository;
+import com.onlinevoting.repository.RoleFeatureMappingRepository;
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
+>>>>>>> 439abc380dade0c83dadd315c584fb509b33627f
 
 @Service
 public class MenuServiceImpl implements MenuService {
     
     private final RoleFeatureMappingRepository roleFeatureMappingRepository;
     private final FeatureRepository featureRepository;
+<<<<<<< HEAD
     private final UserDetailService userDetailService;
     private final UserContextHelper userContextHelper;
 
@@ -32,6 +44,15 @@ public class MenuServiceImpl implements MenuService {
         this.featureRepository = featureRepository;
         this.userDetailService = userDetailService;
         this.userContextHelper = userContextHelper;
+<<<<<<< HEAD
+=======
+=======
+
+    public MenuServiceImpl(RoleFeatureMappingRepository roleFeatureMappingRepository, FeatureRepository featureRepository) {
+        this.roleFeatureMappingRepository = roleFeatureMappingRepository;
+        this.featureRepository = featureRepository;
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
+>>>>>>> 439abc380dade0c83dadd315c584fb509b33627f
     }
 
     @Override
@@ -69,6 +90,7 @@ public class MenuServiceImpl implements MenuService {
         }
         return menuDtos;
     }
+<<<<<<< HEAD
 
     @Override
     public List<MenuDto> getMenuItemsByUserId(String emailId) {
@@ -89,6 +111,11 @@ public class MenuServiceImpl implements MenuService {
         }
         return getMenuItemsByUserId(emailId);
     }
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
+>>>>>>> 439abc380dade0c83dadd315c584fb509b33627f
     
     private MenuDto convertToMenuDto(Feature feature) {
         return new MenuDto(

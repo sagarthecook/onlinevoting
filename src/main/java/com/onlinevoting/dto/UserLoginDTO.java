@@ -1,10 +1,15 @@
 package com.onlinevoting.dto;
 
+<<<<<<< HEAD
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+=======
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 
 public class UserLoginDTO {
 
@@ -13,8 +18,11 @@ public class UserLoginDTO {
     private String userId;
 
     @NotBlank
+<<<<<<< HEAD
     @NotNull
     @Size(min = 5, max = 5, message = "OTP must be 5 digits")
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     private String otp;
 
     public UserLoginDTO() {

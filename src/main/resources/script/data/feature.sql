@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_active) VALUES 
+=======
+<<<<<<< HEAD
+INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_active) VALUES 
+=======
+INSERT INTO feature(id, name, description, menuId, menuName, url, icon, is_active) VALUES 
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
+>>>>>>> 439abc380dade0c83dadd315c584fb509b33627f
 -- Admin Features
 (1, 'Dashboard', 'Admin Dashboard', 1, 'Admin Panel', '/admin/dashboard', 'fas fa-tachometer-alt', 1),
 (2, 'User Management', 'Manage all users', 1, 'Admin Panel', '/admin/users', 'fas fa-users', 1),

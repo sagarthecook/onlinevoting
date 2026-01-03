@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import java.sql.Date;
 
 import com.onlinevoting.util.DateUtils;
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,6 +14,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         @UniqueConstraint(columnNames = "aadhar_number")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
+=======
+
+@Entity
+@Table(name = "user_detail")
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 public class UserDetail extends AuditDetail {
 
     @Id
@@ -44,10 +50,13 @@ public class UserDetail extends AuditDetail {
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
+<<<<<<< HEAD
     @OneToOne
     @JoinColumn(name = "role_id", nullable = false)
     private UserRole role;
 
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     @NotNull(message = "Date of birth is required")
     @Column(name = "dob", nullable = false)
     private Date dob;
@@ -68,7 +77,11 @@ public class UserDetail extends AuditDetail {
     }
 
     public UserDetail(String firstName, String lastName, String middleName, String emailId, String phoneNo, Address address,
+<<<<<<< HEAD
                       Date dob, Long aadharNumber, byte[] photo, UserRole role) {
+=======
+                      Date dob, Long aadharNumber, byte[] photo) {
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
         super();
         if (firstName == null || firstName.isBlank()) throw new IllegalArgumentException("First name is required");
         if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Last name is required");
@@ -88,7 +101,10 @@ public class UserDetail extends AuditDetail {
         this.dob = dob;
         this.aadharNumber = aadharNumber;
         this.photo = photo;
+<<<<<<< HEAD
         this.role = role;
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
     }
 
     public String getFullName() {
@@ -184,6 +200,7 @@ public class UserDetail extends AuditDetail {
     public String getStatus() {
         return status;
     }
+<<<<<<< HEAD
 
     // Add getter and setter for role so Jackson can (de)serialize it
     public UserRole getRole() {
@@ -194,4 +211,6 @@ public class UserDetail extends AuditDetail {
     public void setRole(UserRole role) {
         this.role = role;
     }
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 }

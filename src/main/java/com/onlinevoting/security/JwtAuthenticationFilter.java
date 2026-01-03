@@ -47,11 +47,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
          requestPath.contains("/v1/address/") ||
          requestPath.contains("/v1/country/list") ||
          requestPath.contains("/v1/states/by-country/") ||
+<<<<<<< HEAD
          requestPath.contains("/v1/roles/") ||
          requestPath.contains("/v1/address/") ||
          requestPath.contains("/v1/user_detail") ||
          requestPath.contains("/v1/voter/search")
         ) {
+=======
+         requestPath.contains("/v1/roles/")) {
+>>>>>>> 439abc380dade0c83dadd315c584fb509b33627f
             filterChain.doFilter(request, response);
             return;
         }

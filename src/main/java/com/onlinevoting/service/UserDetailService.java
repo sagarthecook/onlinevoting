@@ -41,19 +41,32 @@ public class UserDetailService {
           UserDetail newUserDetail = new UserDetail(userDetail.getFirstName(), userDetail.getLastName(),
                     userDetail.getMiddleName(), userDetail.getEmailId(), userDetail.getPhoneNo(),
                     userDetail.getAddress(),
+<<<<<<< HEAD
                     userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getPhoto(), userDetail.getRole());
+=======
+                    userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getPhoto());
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 
           newUserDetail.setActive(false);
           newUserDetail.setStatus(Status.PENDING.getDisplayName());
 
           UserDetail uDetails = userDetailRepository.save(newUserDetail);
           // Send welcome email
+<<<<<<< HEAD
           try {
                emailService.sendEmailWithTemplate(userDetail.getEmailId(), EmailConstants.WELCOME_SUBJECT,
                          EmailConstants.USER_CREATE_TEMPLATE, Map.of("name", userDetail.getFirstName()));
           } catch (Exception e) {
                e.printStackTrace();
           }
+=======
+          // try {
+          //      emailService.sendEmailWithTemplate(userDetail.getEmailId(), EmailConstants.WELCOME_SUBJECT,
+          //                EmailConstants.USER_CREATE_TEMPLATE, Map.of("name", userDetail.getFirstName()));
+          // } catch (Exception e) {
+          //      e.printStackTrace();
+          // }
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
           return uDetails;
      }
 

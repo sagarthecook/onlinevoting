@@ -3,7 +3,10 @@ package com.onlinevoting.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.CrossOrigin;
+=======
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +17,12 @@ import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.service.StateService;
 
 @RestController
+<<<<<<< HEAD
 @RequestMapping("/v1/states")
 @CrossOrigin(origins = "*", allowedHeaders = "*")    
+=======
+@RequestMapping("/v1/states")    
+>>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 public class StateController {
 
     private final StateService stateService;
