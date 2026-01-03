@@ -58,12 +58,12 @@ public class UserDetailService {
      }
 
      public List<UserDetail> findUsersByPhone(String phone) {
-          return userDetailRepository.findByPhoneNo(phone);
+          return userDetailRepository.findByPhoneNoAndIsActiveTrue(phone);
      }
 
 
      public List<UserDetail> findUsersByEmail(String email) {
-          return userDetailRepository.findByEmail(email);
+          return userDetailRepository.findByEmailAndIsActiveTrue(email);
      }
      
      public void approveUser(Long id, String status) {
