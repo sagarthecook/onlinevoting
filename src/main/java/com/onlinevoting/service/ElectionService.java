@@ -1,8 +1,17 @@
 package com.onlinevoting.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onlinevoting.constants.EmailConstants;
 import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
@@ -12,15 +21,6 @@ import com.onlinevoting.model.Election;
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.ElectionRepository;
 import com.onlinevoting.repository.UserDetailRepository;
-import com.onlinevoting.constants.EmailConstants;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.time.format.DateTimeFormatter;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ElectionService {
@@ -48,7 +48,18 @@ public class ElectionService {
         // Configure ObjectMapper to handle LocalDate properly
         this.objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
     }
+    
+    public void publishNotification(Long electionId, StatusUpdateRequestDTO statusUpdateRequest) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
 
+        election.setNote(statusUpdateRequest.getNote());
+        election.setIsPublish(statusUpdateRequest.getIsPublish());
+        electionRepository.save(election);
+
+        // Send email notification logic can be added here
+        sendElectionPublishedNotification(election);
+    }
     public void publishElection(Long electionId, StatusUpdateRequestDTO statusUpdateRequest) {
         Election election = electionRepository.findById(electionId)
             .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));

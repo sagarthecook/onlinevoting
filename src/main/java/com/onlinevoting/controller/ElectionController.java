@@ -18,7 +18,6 @@ import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
-import com.onlinevoting.model.Election;
 import com.onlinevoting.service.ElectionService;
 
 import jakarta.validation.Valid;
@@ -94,7 +93,13 @@ public class ElectionController {
         return ResponseEntity.ok(response);
     }
     
-    
+     @PatchMapping(path = "/v1/election/publish_notification/{electionId}", consumes = { "application/json" }, produces = { "application/json" }  )
+    public ResponseEntity<ApiResponse<String>> publishNotification(@PathVariable Long electionId, 
+        @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
+        electionService.publishNotification(electionId,statusUpdateRequest);
+        ApiResponse<String> response = new ApiResponse<>(true, "Election notification published successfully", null);
+        return ResponseEntity.ok(response);
+    }
     
 }
  
