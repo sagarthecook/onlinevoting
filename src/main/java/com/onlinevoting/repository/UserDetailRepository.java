@@ -30,8 +30,8 @@ public interface UserDetailRepository extends JpaRepository<UserDetail, Long> {
     @Query("SELECT u FROM UserDetail u WHERE u.emailId = :emailId")
     List<UserDetail> findByEmail(String emailId);
     
-    @Query("SELECT u FROM UserDetail u WHERE u.isActive = true AND u.status = 'Approved' AND u.role.id = 3 AND u.address.cityId.id = 1")
-    List<UserDetail> findActiveVoters();
+    @Query("SELECT u FROM UserDetail u WHERE u.isActive = true AND u.status = 'Approved' AND u.role.id = 3 AND u.address.cityId.id = :cityId")
+    List<UserDetail> findActiveVoters(Long cityId);
 }
 
 

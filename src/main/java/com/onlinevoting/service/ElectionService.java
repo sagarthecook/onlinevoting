@@ -56,7 +56,7 @@ public class ElectionService {
         election.setNote(statusUpdateRequest.getNote());
         election.setIsPublish(statusUpdateRequest.getIsPublish());
         // Send email notification logic can be added here
-       List<UserDetail> activeVoters = userDetailRepository.findActiveVoters();
+       List<UserDetail> activeVoters = userDetailRepository.findActiveVoters(election.getCity().getId());
        List<String> voterEmails = activeVoters.stream()
             .map(UserDetail::getEmailId).toList();
 
@@ -180,7 +180,7 @@ public class ElectionService {
     private void sendElectionPublishedNotification(Election election) {
         try {
             // Get all active voters in the election's city
-            List<UserDetail> eligibleVoters = userDetailRepository.findActiveVoters();
+            List<UserDetail> eligibleVoters = userDetailRepository.findActiveVoters(election.getCity().getId());
             
             // Create email template data
             Map<String, Object> templateData = createElectionEmailTemplateData(election);
