@@ -9,4 +9,8 @@ public interface EmailConstants {
     public static String ACCOUNT_ACTIVATED_TEMPLATE = "account_activated.ftl";
     public static String ACCOUNT_REJECTED_SUBJECT = "Account Rejected - Online Voting System";
     public static String ACCOUNT_REJECTED_TEMPLATE = "account_rejected.ftl";
+    public static String CANDIDATE_STATUS_UPDATE_SUBJECT = "Candidate Application Status Update";
+    public static String CANDIDATE_STATUS_UPDATE_TEMPLATE = "candidate_status_update.ftl";
+    public static String ELECTION_PUBLISHED_SUBJECT = "New Election Published - Online Voting System";
+    public static String ELECTION_PUBLISHED_TEMPLATE = "election_published.ftl";
 }
