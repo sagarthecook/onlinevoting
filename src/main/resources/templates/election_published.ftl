@@ -59,6 +59,39 @@
             padding: 15px;
             margin: 20px 0;
         }
+        .candidates-section {
+            background-color: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .candidate-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .candidate-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 2px solid #007bff;
+        }
+        .candidate-info h4 {
+            margin: 0 0 5px 0;
+            color: #007bff;
+            font-size: 18px;
+        }
+        .candidate-party {
+            color: #666;
+            font-style: italic;
+        }
         .cta-button {
             background-color: #28a745;
             color: white;
@@ -108,6 +141,30 @@
                     <span class="detail-label">Result Date:</span> ${resultDate}
                 </div>
             </div>
+            
+            <#if candidates?? && candidates?size gt 0>
+            <div class="candidates-section">
+                <h3>👥 Candidates</h3>
+                <p>Meet the candidates participating in this election:</p>
+                <#list candidates as candidate>
+                <div class="candidate-item">
+                    <#if candidate.logoUrl?? && candidate.logoUrl?length gt 0>
+                    <img src="${candidate.logoUrl}" alt="${candidate.candidateName} Logo" class="candidate-logo" />
+                    <#else>
+                    <div class="candidate-logo" style="background-color: #007bff; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                        ${candidate.candidateName?substring(0, 1)?upper_case}
+                    </div>
+                    </#if>
+                    <div class="candidate-info">
+                        <h4>${candidate.candidateName}</h4>
+                        <#if candidate.party?? && candidate.party?length gt 0>
+                        <div class="candidate-party">Party: ${candidate.party}</div>
+                        </#if>
+                    </div>
+                </div>
+                </#list>
+            </div>
+            </#if>
             
             <p><strong>What's Next?</strong></p>
             <ul>
