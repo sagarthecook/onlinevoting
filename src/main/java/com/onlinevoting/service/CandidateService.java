@@ -49,6 +49,12 @@ public class CandidateService {
         }
     }
 
+    public List<CandidateResponseDTO> getCandidateByElectionId(Long electionId) {
+        return candidateRepository.findByElection_Id(electionId).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     public List<CandidateResponseDTO> getCandidatebyStatus(String status) {
         if (status == null || status.isBlank()) {
             throw new IllegalArgumentException("Status parameter is required.");
@@ -95,7 +101,8 @@ public class CandidateService {
                 candidate.getStatus(),
                 candidate.getEmailId(),
                 candidate.getNoteForStatus(),
-                candidate.getDob() != null ? candidate.getDob().toString() : null
+                candidate.getDob() != null ? candidate.getDob().toString() : null,
+                candidate.getParty().getLogoText()
         );
     }
 

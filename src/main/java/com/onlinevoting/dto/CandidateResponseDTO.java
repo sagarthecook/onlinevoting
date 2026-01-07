@@ -22,5 +22,22 @@ public class CandidateResponseDTO {
     private String emailId;
     private String noteForStatus;
     private String dob;
+    private String logo;
+
+    public String getCandidateName() {
+        StringBuilder name = new StringBuilder();
+        if (firstName != null) {
+            name.append(firstName).append(" ");
+        }
+        if (middleName != null) {
+            name.append(middleName).append(" ");
+        }
+        if (lastName != null) {
+            name.append(lastName);
+        }
+        return name.toString().trim();
+    }
+
+
 
 }

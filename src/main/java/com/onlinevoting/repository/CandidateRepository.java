@@ -10,4 +10,6 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     public List<Candidate> findByStatus(String status);
 
+    public List<Candidate> findByElection_Id(Long electionId);
+
 }

@@ -93,11 +93,18 @@ public class ElectionController {
         return ResponseEntity.ok(response);
     }
     
+<<<<<<< HEAD
      @PatchMapping(path = "/v1/election/publish_notification/{electionId}", consumes = { "application/json" }, produces = { "application/json" }  )
     public ResponseEntity<ApiResponse<String>> publishNotification(@PathVariable Long electionId, 
         @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
         electionService.publishNotification(electionId,statusUpdateRequest);
         ApiResponse<String> response = new ApiResponse<>(true, "Election notification published successfully", null);
+=======
+    @GetMapping(path="/v1/election/notification/{electionId}", produces = "application/json")
+    public ResponseEntity<ApiResponse<String>> sendElectionNotification(@PathVariable Long  electionId) {
+        electionService.sendElectionNotification(electionId);
+        ApiResponse<String> response = new ApiResponse<>(true, "Election notification sent successfully", null);
+>>>>>>> 8638c1615e0b24a58f394299d81068e8b7f86120
         return ResponseEntity.ok(response);
     }
     
