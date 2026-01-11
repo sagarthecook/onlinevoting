@@ -224,8 +224,13 @@ public class ElectionService {
               log.info("No eligible voters found for election id: " + election.getId());
               throw new IllegalArgumentException("No eligible voters found for election id: " + election.getId());
             }
+            List<CandidateVotingDetail> candidates = candidateService.getCandidateByElectionIdWithDetail(election.getId());
+            if(candidates.isEmpty()){
+              log.info("No candidates found for election id: " + election.getId());
+              throw new IllegalArgumentException("No candidates found for election id: " + election.getId());
+            }
             // Create email template data
-            Map<String, Object> templateData = createElectionEmailTemplateData(election);
+            Map<String, Object> templateData = createElectionEmailTemplateData(election,candidates);
             
             // Send email to each eligible voter
             for (UserDetail voter : eligibleVoters) {
@@ -258,7 +263,7 @@ public class ElectionService {
     /**
      * Creates template data for election notification emails
      */
-    private Map<String, Object> createElectionEmailTemplateData(Election election) {
+    private Map<String, Object> createElectionEmailTemplateData(Election election,List<CandidateVotingDetail> candidateVotingDetails) {
         Map<String, Object> templateData = new HashMap<>();
         
         // Election details
@@ -284,7 +289,7 @@ public class ElectionService {
         templateData.put("status", election.getStatus());
         templateData.put("note", election.getNote());
         templateData.put("publishDate", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        
+        templateData.put("candidates", candidateVotingDetails);
         return templateData;
     }
 }
