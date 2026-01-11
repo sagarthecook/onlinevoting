@@ -25,7 +25,10 @@ import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.ElectionRepository;
 import com.onlinevoting.repository.UserDetailRepository;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 0fc3f0727ae029d83c0d7a0dbad5efaaeb3cca3f
 
 import lombok.extern.log4j.Log4j2;
 
@@ -78,6 +81,7 @@ public class ElectionService {
             .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         election.setNote(statusUpdateRequest.getNote());
         election.setIsPublish(statusUpdateRequest.getIsPublish());
         electionRepository.save(election);
@@ -86,6 +90,8 @@ public class ElectionService {
         sendElectionPublishedNotification(election);
     }
 =======
+=======
+>>>>>>> 0fc3f0727ae029d83c0d7a0dbad5efaaeb3cca3f
     public void sendElectionNotification(Long electionId) {
         Election election = electionRepository.findById(electionId)
             .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
@@ -93,7 +99,10 @@ public class ElectionService {
         sendElectionPublishedNotification(election);
     }
 
+<<<<<<< HEAD
 >>>>>>> 8638c1615e0b24a58f394299d81068e8b7f86120
+=======
+>>>>>>> 0fc3f0727ae029d83c0d7a0dbad5efaaeb3cca3f
     public void publishElection(Long electionId, StatusUpdateRequestDTO statusUpdateRequest) {
         Election election = electionRepository.findById(electionId)
             .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
@@ -250,8 +259,16 @@ public class ElectionService {
               log.info("No eligible voters found for election id: " + election.getId());
               throw new IllegalArgumentException("No eligible voters found for election id: " + election.getId());
             }
+<<<<<<< HEAD
+=======
+            List<CandidateVotingDetail> candidates = candidateService.getCandidateByElectionIdWithDetail(election.getId());
+            if(candidates.isEmpty()){
+              log.info("No candidates found for election id: " + election.getId());
+              throw new IllegalArgumentException("No candidates found for election id: " + election.getId());
+            }
+>>>>>>> 0fc3f0727ae029d83c0d7a0dbad5efaaeb3cca3f
             // Create email template data
-            Map<String, Object> templateData = createElectionEmailTemplateData(election);
+            Map<String, Object> templateData = createElectionEmailTemplateData(election,candidates);
             
             // Send email to each eligible voter
             for (UserDetail voter : eligibleVoters) {
@@ -284,7 +301,7 @@ public class ElectionService {
     /**
      * Creates template data for election notification emails
      */
-    private Map<String, Object> createElectionEmailTemplateData(Election election) {
+    private Map<String, Object> createElectionEmailTemplateData(Election election,List<CandidateVotingDetail> candidateVotingDetails) {
         Map<String, Object> templateData = new HashMap<>();
         
         // Election details
@@ -310,7 +327,7 @@ public class ElectionService {
         templateData.put("status", election.getStatus());
         templateData.put("note", election.getNote());
         templateData.put("publishDate", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        
+        templateData.put("candidates", candidateVotingDetails);
         return templateData;
     }
 }

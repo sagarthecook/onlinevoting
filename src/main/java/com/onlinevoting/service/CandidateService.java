@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinevoting.constants.EmailConstants;
 import com.onlinevoting.dto.CandidateResponseDTO;
+import com.onlinevoting.dto.CandidateVotingDetail;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Candidate;
 import com.onlinevoting.repository.CandidateRepository;
@@ -55,6 +56,15 @@ public class CandidateService {
                 .collect(Collectors.toList());
     }
 
+<<<<<<< HEAD
+=======
+    public List<CandidateVotingDetail> getCandidateByElectionIdWithDetail(Long electionId) {
+        return candidateRepository.findByElection_Id(electionId).stream()
+                .map(this::convertCandidateVotingDetail)
+                .collect(Collectors.toList());
+    }
+
+>>>>>>> 0fc3f0727ae029d83c0d7a0dbad5efaaeb3cca3f
     public List<CandidateResponseDTO> getCandidatebyStatus(String status) {
         if (status == null || status.isBlank()) {
             throw new IllegalArgumentException("Status parameter is required.");
@@ -104,6 +114,13 @@ public class CandidateService {
                 candidate.getDob() != null ? candidate.getDob().toString() : null,
                 candidate.getParty().getLogoText()
         );
+    }
+
+  private CandidateVotingDetail convertCandidateVotingDetail(Candidate candidate) {
+        String partyName = candidate.getParty().getId() != null ? candidate.getParty().getName().toString() : null;
+        return new CandidateVotingDetail(String.join(" ", candidate.getFirstName(), 
+        candidate.getMiddleName(), candidate.getLastName()) 
+        , partyName, candidate.getParty().getLogoText());
     }
 
     private void sendStatusUpdateEmail(Candidate candidate, String status, String noteForStatus) {
