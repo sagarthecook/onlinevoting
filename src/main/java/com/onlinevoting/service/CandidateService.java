@@ -56,15 +56,13 @@ public class CandidateService {
                 .collect(Collectors.toList());
     }
 
-<<<<<<< HEAD
-=======
     public List<CandidateVotingDetail> getCandidateByElectionIdWithDetail(Long electionId) {
         return candidateRepository.findByElection_Id(electionId).stream()
                 .map(this::convertCandidateVotingDetail)
                 .collect(Collectors.toList());
     }
 
->>>>>>> 0fc3f0727ae029d83c0d7a0dbad5efaaeb3cca3f
+
     public List<CandidateResponseDTO> getCandidatebyStatus(String status) {
         if (status == null || status.isBlank()) {
             throw new IllegalArgumentException("Status parameter is required.");
