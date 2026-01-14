@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinevoting.dto.ApiResponse;
+import com.onlinevoting.dto.BaseDTO;
+import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.service.ElectionService;
@@ -37,6 +39,21 @@ public class ElectionController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping(path="/v1/election/{electionId}", produces = "application/json")
+    public ResponseEntity<ApiResponse<ElectionAddressDTO>> getElectionById(@PathVariable Long  electionId) {
+        ElectionAddressDTO election = electionService.getElectionById(electionId);
+        ApiResponse<ElectionAddressDTO> response = new ApiResponse<>(true, election, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path="/v1/election/detail/{electionId}", produces = "application/json")
+    public ResponseEntity<ApiResponse<ElectionResponseDto>> getElectionDetails(@PathVariable Long  electionId) {
+        ElectionResponseDto election = electionService.getElectionDetails(electionId);
+        ApiResponse<ElectionResponseDto> response = new ApiResponse<>(true, election, null);
+        return ResponseEntity.ok(response);
+    }
+
+
     @GetMapping(path="/v1/election", produces = "application/json")
     public ResponseEntity<ApiResponse<List<ElectionResponseDto>>> getAllElections() {
         List<ElectionResponseDto> elections = electionService.getAllElections();
@@ -52,6 +69,13 @@ public class ElectionController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(path = "/v1/election/approved", produces = { "application/json"})
+    public ResponseEntity<ApiResponse<List<BaseDTO>>> getApprovedElections() {
+        List<BaseDTO> elections = electionService.getApprovedElections();
+        ApiResponse<List<BaseDTO>> response = new ApiResponse<>(true, elections, null);
+        return ResponseEntity.ok(response);
+    }
+
 
     @PatchMapping(path = "/v1/election/status/{electionId}", consumes = { "application/json" }, produces = { "application/json" }  )
     public ResponseEntity<ApiResponse<String>> approveUser(@PathVariable Long electionId, 
@@ -60,7 +84,21 @@ public class ElectionController {
         ApiResponse<String> response = new ApiResponse<>(true, "Election " + statusUpdateRequest.getStatus().toLowerCase() + " successfully", null);
         return ResponseEntity.ok(response);
     }
-    
+
+    @PatchMapping(path = "/v1/election/publish/{electionId}", consumes = { "application/json" }, produces = { "application/json" }  )
+    public ResponseEntity<ApiResponse<String>> publishElection(@PathVariable Long electionId, 
+        @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
+        electionService.publishElection(electionId,statusUpdateRequest);
+        ApiResponse<String> response = new ApiResponse<>(true, "Election published successfully", null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path="/v1/election/notification/{electionId}", produces = "application/json")
+    public ResponseEntity<ApiResponse<String>> sendElectionNotification(@PathVariable Long  electionId) {
+        electionService.sendElectionNotification(electionId);
+        ApiResponse<String> response = new ApiResponse<>(true, "Election notification sent successfully", null);
+        return ResponseEntity.ok(response);
+    }
     
 }
  

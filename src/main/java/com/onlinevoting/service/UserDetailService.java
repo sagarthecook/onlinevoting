@@ -41,7 +41,7 @@ public class UserDetailService {
           UserDetail newUserDetail = new UserDetail(userDetail.getFirstName(), userDetail.getLastName(),
                     userDetail.getMiddleName(), userDetail.getEmailId(), userDetail.getPhoneNo(),
                     userDetail.getAddress(),
-                    userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getPhoto(), userDetail.getRole());
+                    userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getDocsUrl(), userDetail.getRole());
 
           newUserDetail.setActive(false);
           newUserDetail.setStatus(Status.PENDING.getDisplayName());
@@ -55,6 +55,15 @@ public class UserDetailService {
                e.printStackTrace();
           }
           return uDetails;
+     }
+
+     public List<UserDetail> findUsersByPhone(String phone) {
+          return userDetailRepository.findByPhoneNo(phone);
+     }
+
+
+     public List<UserDetail> findUsersByEmail(String email) {
+          return userDetailRepository.findByEmail(email);
      }
      
      public void approveUser(Long id, String status) {
@@ -152,7 +161,7 @@ public class UserDetailService {
           user.setAddress(userDetail.getAddress());
           user.setDob(userDetail.getDob());
           user.setAadharNumber(userDetail.getAadharNumber());
-          user.setPhoto(userDetail.getPhoto());
+          user.setDocsUrl(userDetail.getDocsUrl());
 
           return userDetailRepository.save(user);
           
