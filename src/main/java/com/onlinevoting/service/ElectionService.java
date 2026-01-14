@@ -4,15 +4,32 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.onlinevoting.dto.BaseDTO;
+import com.onlinevoting.dto.CandidateResponseDTO;
+import com.onlinevoting.dto.CandidateVotingDetail;
+import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
+import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.enums.Status;
+import com.onlinevoting.model.Candidate;
 import com.onlinevoting.model.Election;
+import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.ElectionRepository;
+import com.onlinevoting.repository.UserDetailRepository;
 
+import lombok.extern.log4j.Log4j2;
+
+import com.onlinevoting.constants.EmailConstants;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.time.format.DateTimeFormatter;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class ElectionService {
 
     private final ElectionRepository electionRepository;
@@ -21,25 +38,93 @@ public class ElectionService {
     private final StateService stateService;
     private final CityService cityService;
     private final UserDetailService userDetailService;
+    private final EmailService emailService;
+    private final UserDetailRepository userDetailRepository;
+    private final CandidateService candidateService;
+    private final VotingService votingService;
 
     public ElectionService(ElectionRepository electionRepository, CountryService countryService, 
-        StateService stateService, CityService cityService, UserDetailService userDetailService) {
+        StateService stateService, CityService cityService, UserDetailService userDetailService, 
+        EmailService emailService, UserDetailRepository userDetailRepository,
+        CandidateService candidateService, VotingService votingService) {
         this.electionRepository = electionRepository;
         this.countryService = countryService;
         this.stateService = stateService;
         this.cityService = cityService;
         this.userDetailService = userDetailService;
+        this.emailService = emailService;
+        this.userDetailRepository = userDetailRepository;
+        this.candidateService = candidateService;
+        this.votingService = votingService;
         this.objectMapper = new ObjectMapper();
         // Configure ObjectMapper to handle LocalDate properly
         this.objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
     }
 
+    public void sendElectionNotification(Long electionId) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+        
+        sendElectionPublishedNotification(election);
+    }
+
+    public void publishElection(Long electionId, StatusUpdateRequestDTO statusUpdateRequest) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+
+        election.setNote(statusUpdateRequest.getNote());
+        election.setIsPublish(statusUpdateRequest.getIsPublish());
+
+        // Candidate selection logic can be added here
+        List<CandidateResponseDTO> selectedCandidates = candidateService.getCandidateByElectionId(electionId);
+        // Send email to candidate for selection notification - NEXT STEP
+        List<CandidateVotingDetail> candidateVotingDetails = selectedCandidates.stream().map(c -> {
+            CandidateVotingDetail detail = new CandidateVotingDetail();
+            detail.setCandidateName(c.getCandidateName());
+            detail.setParty(c.getParty());
+            detail.setLogoUrl(c.getLogo());
+            return detail;
+        }).collect(Collectors.toList());
+
+        // get all active voters in the election's city
+        List<UserDetail> activeVoters = userDetailRepository.findActiveVoters(election.getCity().getId());
+        // add entry in voting table
+        votingService.createVotingEntries(electionId, activeVoters);
+        // get all active voters in the election id
+
+        // Send email notification logic can be added here
+   
+       List<String> voterEmails = activeVoters.stream()
+            .map(UserDetail::getEmailId).toList();
+
+            if (statusUpdateRequest.getIsPublish() != null && statusUpdateRequest.getIsPublish()) {
+            // Prepare email content
+            Map<String, Object> emailModel = new HashMap<>();
+            emailModel.put("electionName", election.getElectionName());
+            emailModel.put("electionDate", election.getElectionDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            emailModel.put("resultDate", election.getResultDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            emailModel.put("note", statusUpdateRequest.getNote());
+            emailModel.put("candidates", candidateVotingDetails);    
+            // Send email to all active voters in the election's city
+            try{
+                emailService.sendEmailWithTemplate(voterEmails, EmailConstants.ELECTION_PUBLISHED_SUBJECT, 
+               EmailConstants.ELECTION_PUBLISHED_TEMPLATE, emailModel);
+            }catch(Exception e){
+                System.out.println("Error sending election published emails: " + e.getMessage());
+            }
+
+        }
+       electionRepository.save(election);
+    }
+    
     public Election saveElection(String election) {
         try {
             // Convert JSON string to Election object
             Election electionObject = objectMapper.readValue(election, Election.class);
             electionObject.setActive(true);
             electionObject.setStatus(Status.PENDING.getDisplayName());
+            electionObject.setIsPublish(false);
+            electionObject.setNote("");
             if(electionObject.getElectionDate().isAfter(electionObject.getResultDate())) {
                 throw new IllegalArgumentException("Election date must be before result date.");
             }
@@ -53,6 +138,20 @@ public class ElectionService {
             throw new RuntimeException("Failed to parse election JSON: " + e.getMessage(), e);
         }
     } 
+
+    public ElectionAddressDTO getElectionById(Long electionId) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+        return toDtoWithIdsDto(election);
+    }
+
+        public ElectionResponseDto getElectionDetails(Long electionId) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+        return toDto(election);
+    }
+
+
 
     public List<ElectionResponseDto> getAllElections() {
         return electionRepository.findAll().stream()
@@ -83,18 +182,25 @@ public class ElectionService {
     public List<BaseDTO> getApprovedElections() {
         List<Election> approvedElections = electionRepository.findByStatusAndIsActiveTrue(Status.APPROVED.getDisplayName());
 
-      return approvedElections.stream()
-            .map(election -> new BaseDTO(election.getElectionId(), election.getElectionName()))
+      return approvedElections.stream().filter(e->!e.getResultDate().isBefore(LocalDate.now()))
+            .map(election -> new BaseDTO(election.getId(), election.getElectionName()))
             .toList();
     }
 
+ private ElectionAddressDTO toDtoWithIdsDto(Election election) {
+        return new ElectionAddressDTO(
+            election.getCountry().getId(),
+            election.getState().getId(),
+             election.getCity().getId()
+        );
+    }
     private ElectionResponseDto toDto(Election election) {
         String countryName = countryService.getById(election.getCountry().getId()).getName();
         String stateName = stateService.getById(election.getState().getId()).getName();
         String cityName = cityService.getById( election.getCity().getId()).getName();
         String officerName = userDetailService.getUserById(election.getOfficer().getId()).getFullName();
         return new ElectionResponseDto(
-            election.getElectionId(),
+            election.getId(),
             election.getElectionName(),
             election.getElectionDate(),
             election.getResultDate(),
@@ -102,7 +208,88 @@ public class ElectionService {
             stateName,
              cityName,
             officerName,
-            election.getStatus()
+            election.getStatus(),
+            election.getIsPublish()
         );
+    }
+    
+    /**
+     * Sends email notifications to eligible voters when an election is published
+     */
+    private void sendElectionPublishedNotification(Election election) throws IllegalArgumentException {
+        try {
+            // Get all active voters in the election's city
+            List<UserDetail> eligibleVoters = userDetailRepository.findActiveVoters(election.getCity().getId());
+            if(eligibleVoters.isEmpty()){
+              log.info("No eligible voters found for election id: " + election.getId());
+              throw new IllegalArgumentException("No eligible voters found for election id: " + election.getId());
+            }
+            List<CandidateVotingDetail> candidates = candidateService.getCandidateByElectionIdWithDetail(election.getId());
+            if(candidates.isEmpty()){
+              log.info("No candidates found for election id: " + election.getId());
+              throw new IllegalArgumentException("No candidates found for election id: " + election.getId());
+            }
+            // Create email template data
+            Map<String, Object> templateData = createElectionEmailTemplateData(election,candidates);
+            
+            // Send email to each eligible voter
+            for (UserDetail voter : eligibleVoters) {
+                try {
+                    // Add personalized data for each voter
+                    templateData.put("voterName", voter.getFirstName());
+                    templateData.put("voterEmail", voter.getEmailId());
+                    
+                    emailService.sendEmailWithTemplate(
+                        voter.getEmailId(),
+                        EmailConstants.ELECTION_PUBLISHED_SUBJECT,
+                        EmailConstants.ELECTION_PUBLISHED_TEMPLATE,
+                        templateData
+                    );
+                    
+                } catch (Exception e) {
+                    // Log individual email failures but continue with others
+                    System.err.println("Failed to send election notification email to " + voter.getEmailId() + ": " + e.getMessage());
+                }
+            }
+            
+            System.out.println("Election notification emails sent to " + eligibleVoters.size() + " eligible voters");
+            
+        } catch (Exception e) {
+            // Log error but don't fail the election publication
+            System.err.println("Failed to send election notification emails: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Creates template data for election notification emails
+     */
+    private Map<String, Object> createElectionEmailTemplateData(Election election,List<CandidateVotingDetail> candidateVotingDetails) {
+        Map<String, Object> templateData = new HashMap<>();
+        
+        // Election details
+        templateData.put("electionName", election.getElectionName());
+        templateData.put("electionDate", election.getElectionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        templateData.put("formEndDate", election.getFormEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        templateData.put("resultDate", election.getResultDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        
+        // Location details
+        String countryName = countryService.getById(election.getCountry().getId()).getName();
+        String stateName = stateService.getById(election.getState().getId()).getName();
+        String cityName = cityService.getById(election.getCity().getId()).getName();
+        
+        templateData.put("country", countryName);
+        templateData.put("state", stateName);
+        templateData.put("city", cityName);
+        
+        // Officer details
+        String officerName = userDetailService.getUserById(election.getOfficer().getId()).getFullName();
+        templateData.put("officerName", officerName);
+        
+        // Additional information
+        templateData.put("status", election.getStatus());
+        templateData.put("note", election.getNote());
+        templateData.put("publishDate", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        templateData.put("candidates", candidateVotingDetails);
+        return templateData;
     }
 }

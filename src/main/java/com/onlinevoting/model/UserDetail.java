@@ -57,9 +57,9 @@ public class UserDetail extends AuditDetail {
     @Column(name = "aadhar_number", nullable = false, unique = true)
     private Long  aadharNumber;
 
-    @Lob
-    @Column(name = "photo", columnDefinition = "LONGBLOB")
-    private byte[] photo;
+    @Column(name = "docs_url", length = 512)
+    @NotNull(message = "Documents is required")
+    private String docsUrl;
     
     @Column(name = "status", length = 20)
     private String status;
@@ -68,7 +68,7 @@ public class UserDetail extends AuditDetail {
     }
 
     public UserDetail(String firstName, String lastName, String middleName, String emailId, String phoneNo, Address address,
-                      Date dob, Long aadharNumber, byte[] photo, UserRole role) {
+                      Date dob, Long aadharNumber,String docsUrl, UserRole role) {
         super();
         if (firstName == null || firstName.isBlank()) throw new IllegalArgumentException("First name is required");
         if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Last name is required");
@@ -87,7 +87,7 @@ public class UserDetail extends AuditDetail {
         this.address = address;
         this.dob = dob;
         this.aadharNumber = aadharNumber;
-        this.photo = photo;
+        this.docsUrl = docsUrl;
         this.role = role;
     }
 
@@ -117,10 +117,6 @@ public class UserDetail extends AuditDetail {
 
     public void setAadharNumber(Long aadharNumber) {
         this.aadharNumber = aadharNumber;
-    }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
     }
 
     public void setFirstName(String firstName) {
@@ -177,8 +173,10 @@ public class UserDetail extends AuditDetail {
      return String.join(" ", firstName, lastName);
     }
 
-    public byte[] getPhoto() {
-        return photo;
+
+
+    public void setDocsUrl(String docsUrl) {
+        this.docsUrl = docsUrl;
     }
 
     public String getStatus() {
@@ -193,5 +191,9 @@ public class UserDetail extends AuditDetail {
     @JsonProperty("role")
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public String getDocsUrl() {
+        return docsUrl;
     }
 }

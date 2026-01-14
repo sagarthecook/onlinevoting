@@ -6,6 +6,7 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 (4, 'System Settings', 'Configure system settings', 1, 'Admin Panel', '/admin/settings', 'fas fa-cogs', 1),
 (5, 'Reports', 'View system reports', 1, 'Admin Panel', '/admin/reports', 'fas fa-chart-bar', 1),
 (6, 'Audit Logs', 'View audit trails', 1, 'Admin Panel', '/admin/logs', 'fas fa-file-alt', 1),
+(27, 'Election Publish', 'Publish elections', 2, 'Election Management', 'publish_election', 'fas fa-tachometer-alt', 1),
 
 -- Election Officer Features
 (7, 'Election Creation', 'Manage elections', 2, 'Election Management', 'create_election', 'fas fa-vote-yea', 1),
@@ -14,6 +15,7 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 (10, 'Election Results', 'View and manage results', 2, 'Election Management', '/officer/results', 'fas fa-trophy', 1),
 (11, 'Election Statistics', 'View election statistics', 2, 'Election Management', '/officer/statistics', 'fas fa-chart-pie', 1),
 (23, 'Election Verification', 'Election Verification', 2, 'Election Management', 'election_verification', 'fas fa-chart-pie', 1),
+(26, 'Candidate Verification', 'Candidate Verification', 2, 'Election Management', 'candidate_verification', 'fas fa-tachometer-alt', 1),
 
 -- Voter Features
 (12, 'Vote', 'Cast your vote', 3, 'Voter Portal', '/voter/vote', 'fas fa-check-square', 1),
