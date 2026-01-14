@@ -13,7 +13,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinevoting.constants.EmailConstants;
 import com.onlinevoting.dto.CandidateResponseDTO;
+<<<<<<< HEAD
 import com.onlinevoting.dto.CandidateVotingDetail;
+=======
+>>>>>>> 34d207b24ffd2b7fc7a88f2dce6c2cc2d2f70dee
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Candidate;
 import com.onlinevoting.repository.CandidateRepository;
@@ -50,6 +53,7 @@ public class CandidateService {
         }
     }
 
+<<<<<<< HEAD
     public List<CandidateResponseDTO> getCandidateByElectionId(Long electionId) {
         return candidateRepository.findByElection_Id(electionId).stream()
                 .map(this::toDto)
@@ -62,6 +66,8 @@ public class CandidateService {
                 .collect(Collectors.toList());
     }
 
+=======
+>>>>>>> 34d207b24ffd2b7fc7a88f2dce6c2cc2d2f70dee
     public List<CandidateResponseDTO> getCandidatebyStatus(String status) {
         if (status == null || status.isBlank()) {
             throw new IllegalArgumentException("Status parameter is required.");
@@ -108,6 +114,7 @@ public class CandidateService {
                 candidate.getStatus(),
                 candidate.getEmailId(),
                 candidate.getNoteForStatus(),
+<<<<<<< HEAD
                 candidate.getDob() != null ? candidate.getDob().toString() : null,
                 candidate.getParty().getLogoText()
         );
@@ -120,6 +127,12 @@ public class CandidateService {
         , partyName, candidate.getParty().getLogoText());
     }
 
+=======
+                candidate.getDob() != null ? candidate.getDob().toString() : null
+        );
+    }
+
+>>>>>>> 34d207b24ffd2b7fc7a88f2dce6c2cc2d2f70dee
     private void sendStatusUpdateEmail(Candidate candidate, String status, String noteForStatus) {
         try {
             Map<String, Object> templateData = createEmailTemplateData(candidate, status, noteForStatus);
