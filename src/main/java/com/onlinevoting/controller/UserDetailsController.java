@@ -39,7 +39,6 @@ public class UserDetailsController {
     public ResponseEntity<ApiResponse<UserDetail>> createUser(
             @RequestPart("user") @Valid String userDetailStr) throws Exception {
         UserDetail detail = new ObjectMapper().readValue(userDetailStr, UserDetail.class);
-        // detail.setPhoto(profilePhoto);
         UserDetail savedUser = userDetailService.saveUser(detail);
         ApiResponse<UserDetail> response = new ApiResponse<>(true, savedUser, null);
         return new ResponseEntity(response, null, 201);
@@ -56,11 +55,8 @@ public class UserDetailsController {
     // Put API to update user details
     @PutMapping(path = "/v1/user_detail", consumes = { "multipart/form-data" })
     public ResponseEntity<ApiResponse<UserDetail>> updateUser(
-            @RequestPart("user") @Valid String userDetail,
-            @RequestPart("photo") byte[] profilePhoto) throws Exception {
+            @RequestPart("user") @Valid String userDetail) throws Exception {
         UserDetail detail = new ObjectMapper().readValue(userDetail, UserDetail.class);
-        detail.setPhoto(profilePhoto);
-
         UserDetail updatedUser = userDetailService.updateUser(detail);
         ApiResponse<UserDetail> response = new ApiResponse<>(true, updatedUser, null);
         return ResponseEntity.ok(response);
