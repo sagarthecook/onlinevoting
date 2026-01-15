@@ -109,7 +109,7 @@ public class CandidateService {
                 candidate.getEmailId(),
                 candidate.getNoteForStatus(),
                 candidate.getDob() != null ? candidate.getDob().toString() : null,
-                candidate.getParty().getLogoText()
+                candidate.getParty().getLogoUrl()
         );
     }
 
@@ -117,7 +117,7 @@ public class CandidateService {
         String partyName = candidate.getParty().getId() != null ? candidate.getParty().getName().toString() : null;
         return new CandidateVotingDetail(String.join(" ", candidate.getFirstName(), 
         candidate.getMiddleName(), candidate.getLastName()) 
-        , partyName, candidate.getParty().getLogoText());
+        , partyName, candidate.getParty().getLogoUrl());
     }
 
     private void sendStatusUpdateEmail(Candidate candidate, String status, String noteForStatus) {
