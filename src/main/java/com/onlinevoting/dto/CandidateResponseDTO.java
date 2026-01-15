@@ -22,7 +22,6 @@ public class CandidateResponseDTO {
     private String emailId;
     private String noteForStatus;
     private String dob;
-<<<<<<< HEAD
     private String logo;
 
     public String getCandidateName() {
@@ -40,7 +39,5 @@ public class CandidateResponseDTO {
     }
 
 
-=======
->>>>>>> 34d207b24ffd2b7fc7a88f2dce6c2cc2d2f70dee
 
 }

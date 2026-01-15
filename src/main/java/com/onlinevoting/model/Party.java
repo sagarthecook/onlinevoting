@@ -29,11 +29,16 @@ public class Party extends AuditDetail {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @NotBlank(message = "Logo text is mandatory")
-    @Column(name = "logo_text", nullable = false, columnDefinition = "TEXT")
-    private String logoText;
+    @NotBlank(message = "Logo URL is mandatory")
+    @Column(name = "logo_url", nullable = false, length = 512)
+    private String logoUrl;
 
     @NotBlank(message = "Party president is mandatory")
     @Column(name = "president_name", nullable = false, length = 255)
     private String presidentName;
+
+    public Party orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
 }

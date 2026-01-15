@@ -10,9 +10,6 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     public List<Candidate> findByStatus(String status);
 
-<<<<<<< HEAD
     public List<Candidate> findByElection_Id(Long electionId);
 
-=======
->>>>>>> 34d207b24ffd2b7fc7a88f2dce6c2cc2d2f70dee
 }

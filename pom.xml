@@ -30,14 +30,10 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-<<<<<<< HEAD
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-security</artifactId>
 	</dependency>
-=======
-
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 		<dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
@@ -52,7 +48,6 @@
 		<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 		<dependency>
-<<<<<<< HEAD
 		<groupId>io.jsonwebtoken</groupId>
 		<artifactId>jjwt-api</artifactId>
 		<version>0.11.5</version>
@@ -68,8 +63,6 @@
 		<version>0.11.5</version>
 	</dependency>
 		<dependency>
-=======
->>>>>>> 54e1742399e6bb5a80a1a317934d2ca560f223fc
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>

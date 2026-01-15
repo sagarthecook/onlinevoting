@@ -43,11 +43,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/v1/user/generate_otp","/v1/user/validate_otp", 
                                "/v1/country/list", "/v1/roles/**", "/v1/states/by-country/**", 
-<<<<<<< HEAD
                                "/v1/cities/**", "/v1/address/", "/v1/user_detail/**","/v1/voter/search").permitAll()
-=======
-                               "/v1/cities/**", "/v1/address/**", "/v1/user_detail").permitAll()
->>>>>>> 439abc380dade0c83dadd315c584fb509b33627f
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

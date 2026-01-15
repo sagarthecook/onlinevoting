@@ -59,7 +59,6 @@
             padding: 15px;
             margin: 20px 0;
         }
-<<<<<<< HEAD
         .candidates-section {
             background-color: #e8f5e8;
             border: 1px solid #c3e6c3;
@@ -93,8 +92,6 @@
             color: #666;
             font-style: italic;
         }
-=======
->>>>>>> 34d207b24ffd2b7fc7a88f2dce6c2cc2d2f70dee
         .cta-button {
             background-color: #28a745;
             color: white;
@@ -145,7 +142,6 @@
                 </div>
             </div>
             
-<<<<<<< HEAD
             <#if candidates?? && candidates?size gt 0>
             <div class="candidates-section">
                 <h3>👥 Candidates</h3>
@@ -170,8 +166,6 @@
             </div>
             </#if>
             
-=======
->>>>>>> 34d207b24ffd2b7fc7a88f2dce6c2cc2d2f70dee
             <p><strong>What's Next?</strong></p>
             <ul>
                 <li>Review the election details carefully</li>

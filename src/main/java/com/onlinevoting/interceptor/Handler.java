@@ -33,19 +33,11 @@ public class Handler implements HandlerInterceptor {
 
         // Bypass token validation for public endpoints and preflight requests
         Set<String> exactPublicEndpoints = Set.of("/v1/user/generate_otp", "/v1/user/validate_otp",
-<<<<<<< HEAD
              "/v1/roles/", "/v1/address/", "/v1/country/list","/v1/user_detail","/v1/voter/search"
         );
         
         Set<String> patternPublicEndpoints = Set.of("/v1/states/by-country/", "/v1/country/", 
              "/v1/states/", "/v1/cities/", "/v1/roles/","/v1/address/","/v1/user_detail"
-=======
-             "/v1/roles/", "/v1/address", "/v1/country/list"
-        );
-        
-        Set<String> patternPublicEndpoints = Set.of("/v1/states/by-country/", "/v1/country/", 
-             "/v1/states/", "/v1/cities/", "/v1/roles/"
->>>>>>> 439abc380dade0c83dadd315c584fb509b33627f
         );
         
         boolean isPublicEndpoint = exactPublicEndpoints.contains(requestPath) ||
