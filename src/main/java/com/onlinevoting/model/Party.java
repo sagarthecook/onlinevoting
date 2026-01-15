@@ -36,4 +36,9 @@ public class Party extends AuditDetail {
     @NotBlank(message = "Party president is mandatory")
     @Column(name = "president_name", nullable = false, length = 255)
     private String presidentName;
+
+    public Party orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
 }
