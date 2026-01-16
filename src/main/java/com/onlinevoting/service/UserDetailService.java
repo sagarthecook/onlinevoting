@@ -216,7 +216,8 @@ public class UserDetailService {
                  (String) obj[4], // phoneNumber
                  dobStr,          // dateOfBirth as String
                  adharStr,        // aadharNumber as String
-                 (String) obj[7]  // status
+                 (String) obj[7]  ,
+                 (String) obj[8]  // profilePhoto
             );
       }
 
