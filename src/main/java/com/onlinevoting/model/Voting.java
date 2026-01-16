@@ -34,4 +34,9 @@ public class Voting extends AuditDetail {
     @Column(name = "candidate_id", nullable = true)
     private String candidateId;
 
+     @Column(name = "lattitude", nullable = true)
+    private String lattitude;
+
+     @Column(name = "longitude", nullable = true)
+    private String longitude;
 }
