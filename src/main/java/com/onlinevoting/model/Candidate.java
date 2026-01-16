@@ -75,4 +75,12 @@ public class Candidate extends AuditDetail {
     @Column(name = "note_for_status", length = 500)
     private String noteForStatus;
 
+    @Column(name = "candidate_photo", length = 512)
+    @NotNull(message = "candidate photo is required")
+    private String candidatePhoto;
+    
+    @Column(name = "income_proof", length = 512)
+    @NotNull(message = "Income proof is required")
+    private String incomeProof;
+
 }

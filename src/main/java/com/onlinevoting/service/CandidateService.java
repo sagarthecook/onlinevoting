@@ -109,7 +109,9 @@ public class CandidateService {
                 candidate.getEmailId(),
                 candidate.getNoteForStatus(),
                 candidate.getDob() != null ? candidate.getDob().toString() : null,
-                candidate.getParty().getLogoUrl()
+                candidate.getParty().getLogoUrl(),
+                candidate.getCandidatePhoto(),
+                candidate.getIncomeProof()
         );
     }
 
