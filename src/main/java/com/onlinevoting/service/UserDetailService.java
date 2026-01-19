@@ -199,15 +199,15 @@ public class UserDetailService {
      }
 
      public UserDetail updateUser(UserDetail userDetail) {
-          var id = userDetail.getId();
+          String emailId = userDetail.getEmailId();
 
-          Optional<UserDetail> existingUserDetail = userDetailRepository.findById(id);
+          UserDetail existingUserDetail = userDetailRepository.findByEmailId(emailId);
           
-          if (existingUserDetail.isEmpty()) {
-               throw new IllegalArgumentException("User with account for ID " + id + " does not exist.");
+          if (existingUserDetail == null) {
+               throw new IllegalArgumentException("User with account for email " + emailId + " does not exist.");
           }
 
-          UserDetail user = existingUserDetail.get();
+          UserDetail user = existingUserDetail;
           user.setFirstName(userDetail.getFirstName());
           user.setLastName(userDetail.getLastName());
           user.setMiddleName(userDetail.getMiddleName());
@@ -216,9 +216,21 @@ public class UserDetailService {
           user.setDob(userDetail.getDob());
           user.setAadharNumber(userDetail.getAadharNumber());
           user.setDocsUrl(userDetail.getDocsUrl());
+          user.setRole(userDetail.getRole());
+          // TO Approve again after profile update
+          user.setActive(false);
+          user.setStatus(Status.PENDING.getDisplayName());
+      
+          UserDetail detail=  userDetailRepository.save(user);
 
-          return userDetailRepository.save(user);
-          
+          // Send update profile email
+          try {
+               emailService.sendEmailWithTemplate(userDetail.getEmailId(), EmailConstants.UPDATE_PROFILE_SUBJECT,
+                         EmailConstants.UPDATE_PROFILE_TEMPLATE, Map.of("name", userDetail.getFirstName()));
+          } catch (Exception e) {
+               e.printStackTrace();
+          }
+          return detail;
      }
 
      public void deleteUser(Long id) {
