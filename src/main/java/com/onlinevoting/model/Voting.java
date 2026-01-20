@@ -1,5 +1,7 @@
 package com.onlinevoting.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,4 +44,10 @@ public class Voting extends AuditDetail {
 
     @Column(name="client_name",nullable = true)
     private String clientName;
+
+    @Column(name="election_start_date_time",nullable = true)
+    private LocalDateTime electionStartDateTime;
+
+    @Column(name="election_end_date_time",nullable = true)
+    private LocalDateTime electionEndDateTime;
 }
