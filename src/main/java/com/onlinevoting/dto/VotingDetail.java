@@ -14,7 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class VotingDetail {
 
-    private String electionId;
+    private Long votingId;
+    private Long electionId;
     private String electionName;
     private LocalDateTime electionStartTime;
     private LocalDateTime electionEndTime;

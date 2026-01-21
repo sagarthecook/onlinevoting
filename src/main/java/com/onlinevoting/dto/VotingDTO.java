@@ -9,12 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CandidateInfo {
+public class VotingDTO {
 
+    private Long voterId;
+    private Long electionId;
     private Long candidateId;
-    private String candidateName;
-    private String partyName;
-    private String symbolUrl;
-    private String photo;
-    
 }

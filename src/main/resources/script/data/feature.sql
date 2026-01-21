@@ -18,7 +18,7 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 (26, 'Candidate Verification', 'Candidate Verification', 2, 'Election Management', 'candidate_verification', 'fas fa-tachometer-alt', 1),
 
 -- Voter Features
-(12, 'Vote', 'Cast your vote', 3, 'Voter Portal', '/voter/vote', 'fas fa-check-square', 1),
+(12, 'Vote', 'Cast your vote', 3, 'Voter Portal', '/home/vote', 'fas fa-check-square', 1),
 (13, 'My Profile', 'View and edit profile', 3, 'Voter Portal', '/profile/2', 'fas fa-user', 1),
 (14, 'Election Info', 'View election information', 3, 'Voter Portal', '/voter/elections', 'fas fa-info-circle', 1),
 (15, 'Voting History', 'View voting history', 3, 'Voter Portal', '/voter/history', 'fas fa-history', 1),

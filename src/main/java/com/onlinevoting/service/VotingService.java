@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.onlinevoting.dto.CandidateResponseDTO;
+import com.onlinevoting.dto.VotingDTO;
 import com.onlinevoting.dto.VotingDetail;
 import com.onlinevoting.model.Candidate;
 import com.onlinevoting.model.Election;
@@ -15,7 +15,10 @@ import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.model.Voting;
 import com.onlinevoting.repository.VotingRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class VotingService {
 
     private final VotingRepository votingRepository;
@@ -33,6 +36,16 @@ public class VotingService {
     }
 
     public void saveVoting(Voting voting) {
+        votingRepository.save(voting);
+    }
+
+    public void voteCandidate(VotingDTO votingDTO) {
+        Voting voting = votingRepository.findById(votingDTO.getVoterId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid voting ID: " + votingDTO.getVoterId()));
+        voting.setCandidateId(votingDTO.getCandidateId().toString());
+        voting.setUpdateBy(voting.getId().toString());
+        voting.setUpdatedDate(LocalDateTime.now());
+        log.info("VotingService.voteCandidate - Voting updated: {}", voting);
         votingRepository.save(voting);
     }
 
@@ -69,10 +82,11 @@ public class VotingService {
           Voting votingEntity = voting.get(0);
             // Map Voting entities to VotingDetail DTO
             VotingDetail votingDetail = new VotingDetail();
+            votingDetail.setVotingId(votingEntity.getId());
             // Populate votingDetail fields as needed
             if(votingEntity.getCandidateId() == null ){
                 // Vote has not been cast yet
-                votingDetail.setElectionId(votingEntity.getElection().getId().toString());
+                votingDetail.setElectionId(votingEntity.getElection().getId());
                 votingDetail.setElectionName(votingEntity.getElection().getElectionName());
                 votingDetail.setElectionStartTime(votingEntity.getElectionStartDateTime());
                 votingDetail.setElectionEndTime(votingEntity.getElectionEndDateTime());
@@ -82,7 +96,7 @@ public class VotingService {
                 if(candidates != null && !candidates.isEmpty()) {
                     List<com.onlinevoting.dto.CandidateInfo> candidateInfos = candidates.stream().map(candidate -> {
                         com.onlinevoting.dto.CandidateInfo info = new com.onlinevoting.dto.CandidateInfo();
-                        info.setCandidateId(candidate.getId().toString());
+                        info.setCandidateId(candidate.getId());
                         info.setCandidateName(candidate.getFullName());
                         
                         Party party = partyService.getPartyById(candidate.getParty().getId());   
