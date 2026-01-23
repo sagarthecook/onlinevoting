@@ -65,7 +65,9 @@ public class UserDetailService {
           return userDetailRepository.findByPhoneNo(phone);
      }
 
-
+     public UserDetail findById(Long id) {
+          return userDetailRepository.findById(id).orElse(null); 
+     }
      public List<UserDetail> findUsersByEmail(String email) {
           return userDetailRepository.findByEmail(email);
      }

@@ -15,4 +15,7 @@ public interface EmailConstants {
     public static String ELECTION_PUBLISHED_SUBJECT = "New Election Published - Online Voting System";
     public static String ELECTION_PUBLISHED_TEMPLATE = "election_published.ftl";
     public static String UPDATE_PROFILE_TEMPLATE = "update_profile.ftl";
+    public static String VOTE_CONFIRMATION_SUBJECT = "Vote Confirmation - Online Voting System";
+    public static String VOTE_CONFIRMATION_TEMPLATE = "vote_confirmation_template.ftl";
+    
 }

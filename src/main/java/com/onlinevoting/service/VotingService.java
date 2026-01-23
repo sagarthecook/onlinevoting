@@ -3,9 +3,11 @@ package com.onlinevoting.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.onlinevoting.constants.EmailConstants;
 import com.onlinevoting.dto.VotingDTO;
 import com.onlinevoting.dto.VotingDetail;
 import com.onlinevoting.model.Candidate;
@@ -28,11 +30,14 @@ public class VotingService {
 
     private final PartyService partyService;
 
-    public VotingService(VotingRepository votingRepository, CandidateService candidateService, PartyService partyService, UserDetailService userDetailService) {
+    private final EmailService emailService;
+
+    public VotingService(VotingRepository votingRepository, CandidateService candidateService, PartyService partyService, UserDetailService userDetailService, EmailService emailService) {
         this.votingRepository = votingRepository;
         this.candidateService = candidateService;
         this.partyService = partyService;
         this.userDetailService = userDetailService;
+        this.emailService = emailService;
     }
 
     public void saveVoting(Voting voting) {
@@ -46,7 +51,24 @@ public class VotingService {
         voting.setUpdateBy(voting.getId().toString());
         voting.setUpdatedDate(LocalDateTime.now());
         log.info("VotingService.voteCandidate - Voting updated: {}", voting);
+        // send email after voting is cast
         votingRepository.save(voting);
+        try{
+          this.emailService.sendEmailWithTemplate(
+            voting.getVoter().getEmailId(),
+           EmailConstants.VOTE_CONFIRMATION_SUBJECT,
+           EmailConstants.VOTE_CONFIRMATION_TEMPLATE,
+            Map.of(
+                "voterName", voting.getVoter().getFullName(),
+                "electionName", voting.getElection().getElectionName(),
+                "votingDate", voting.getElectionStartDateTime().toLocalDate().toString(),
+                "voterId", voting.getVoter().getId().toString(),
+                
+            )
+        );
+        }catch(Exception e){
+            log.error("Error sending vote confirmation email: {}", e.getMessage());
+        }
     }
 
     public void createVotingEntries(Long electionId, List<UserDetail> voters, Election election) {

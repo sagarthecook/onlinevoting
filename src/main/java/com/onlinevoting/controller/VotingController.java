@@ -33,7 +33,7 @@ public class VotingController {
         return ResponseEntity.ok(new ApiResponse(true, votingService.getVotingDetail(emailId), null));
     }
 
-    @PatchMapping(path = "/v1/voting/voteCandidate", produces = "application/json",consumes = "application/json")
+    @PatchMapping(path = "/v1/voting/submit_vote", produces = "application/json",consumes = "application/json")
     public ResponseEntity<ApiResponse> voteCandidate(@RequestBody VotingDTO votingDTO) {
           votingService.voteCandidate(votingDTO);
         return ResponseEntity.ok(new ApiResponse(true, "Vote cast successfully", null));
