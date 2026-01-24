@@ -209,7 +209,7 @@ public class ElectionService {
              cityName,
             officerName,
             election.getStatus(),
-            election.getIsPublish()
+            null, election.getIsPublish()
         );
     }
     

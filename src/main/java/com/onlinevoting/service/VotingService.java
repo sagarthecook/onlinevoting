@@ -8,8 +8,12 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.onlinevoting.constants.EmailConstants;
+import com.onlinevoting.dto.BaseDTO;
+import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.VotingDTO;
 import com.onlinevoting.dto.VotingDetail;
+import com.onlinevoting.dto.VotingHistoryDTO;
+import com.onlinevoting.enums.VotingStatus;
 import com.onlinevoting.model.Candidate;
 import com.onlinevoting.model.Election;
 import com.onlinevoting.model.Party;
@@ -44,6 +48,26 @@ public class VotingService {
         votingRepository.save(voting);
     }
 
+    public List<VotingHistoryDTO> getVotingHistory(String emailId) {
+       List<UserDetail> userDetail = userDetailService.findUsersByEmail(emailId);
+        if(userDetail == null || userDetail.isEmpty()) {
+            throw new RuntimeException("User not found with email: " + emailId);
+        }
+        log.info("VotingService.getEligibleElections - UserDetail: {}", userDetail);
+        String voterId = userDetail.get(0).getId().toString();
+        List<Voting> votings = votingRepository.findByVoterId(voterId);
+        List<VotingHistoryDTO> votingDTOs = votings.stream()
+                .map(voting -> new VotingHistoryDTO(
+                    voting.getElection().getElectionName(),
+                    voting.getVoter().getId().toString(),
+                    voting.getElectionStartDateTime(),
+                    voting.getElectionEndDateTime(),
+                    voting.getCandidateId() != null ? VotingStatus.YES : VotingStatus.NO
+                ))
+                .toList();
+        return votingDTOs;
+    }
+
     public void voteCandidate(VotingDTO votingDTO) {
         Voting voting = votingRepository.findById(votingDTO.getVoterId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid voting ID: " + votingDTO.getVoterId()));
@@ -62,7 +86,7 @@ public class VotingService {
                 "voterName", voting.getVoter().getFullName(),
                 "electionName", voting.getElection().getElectionName(),
                 "votingDate", voting.getElectionStartDateTime().toLocalDate().toString(),
-                "voterId", voting.getVoter().getId().toString(),
+                "voterId", voting.getVoter().getId().toString()
                 
             )
         );
@@ -91,6 +115,30 @@ public class VotingService {
         }
     }   
 
+    public List<BaseDTO> getEligibleElections(String emailId) {
+        // Fetch voterId using emailId
+        List<UserDetail> userDetail = userDetailService.findUsersByEmail(emailId);
+        if(userDetail == null || userDetail.isEmpty()) {
+            throw new RuntimeException("User not found with email: " + emailId);
+        }
+        log.info("VotingService.getEligibleElections - UserDetail: {}", userDetail);
+        String voterId = userDetail.get(0).getId().toString();
+        List<Voting> votings = votingRepository.findByVoterId(voterId);
+        List<BaseDTO> eligibleElections = votings.stream()
+                .map(voting-> toConvertElection(voting))
+                .toList();
+       log.info("VotingService.getEligibleElections - Eligible Elections: {}", eligibleElections);
+        return eligibleElections;
+    }
+    
+   private BaseDTO toConvertElection(Voting voting) {
+        Election election = voting.getElection();
+        return new BaseDTO(
+            election.getId(),
+            election.getElectionName()
+        );
+    }
+
     public VotingDetail getVotingDetail(String emailId) {
         // Fetch voterId using emailId
         List<UserDetail> userDetail = userDetailService.findUsersByEmail(emailId);
@@ -99,7 +147,7 @@ public class VotingService {
         }
 
         String voterId = userDetail.get(0).getId().toString();
-        List<Voting> voting = votingRepository.findByVoterId(voterId);
+        List<Voting> voting = votingRepository.findByVoterIdAndEligibleForVoting(voterId);
         if(voting != null && !voting.isEmpty()) {
           Voting votingEntity = voting.get(0);
             // Map Voting entities to VotingDetail DTO

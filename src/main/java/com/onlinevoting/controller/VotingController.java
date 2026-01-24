@@ -38,4 +38,17 @@ public class VotingController {
           votingService.voteCandidate(votingDTO);
         return ResponseEntity.ok(new ApiResponse(true, "Vote cast successfully", null));
     }
+
+    @GetMapping(path = "/v1/voting/eligible_election", produces = "application/json")
+    public ResponseEntity<ApiResponse> eligibleElection(HttpServletRequest request) {
+        String emailId = tokenService.extractEmailId(request);
+        return ResponseEntity.ok(new ApiResponse(true, votingService.getEligibleElections(emailId), null));
+    }
+
+    @GetMapping(path = "/v1/voting/voting_history", produces = "application/json")
+    public ResponseEntity<ApiResponse> getVotingDetail(HttpServletRequest request) {
+        String emailId = tokenService.extractEmailId(request);
+        return ResponseEntity.ok(new ApiResponse(true, votingService.getVotingHistory(emailId), null));
+    }
+
 }

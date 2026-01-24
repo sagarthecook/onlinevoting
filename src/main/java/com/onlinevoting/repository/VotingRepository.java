@@ -11,5 +11,8 @@ public interface VotingRepository extends JpaRepository<Voting, Long> {
     public java.util.List<Voting> findAllByElection(Long electionId);
 
     @Query("SELECT v FROM Voting v WHERE v.isActive = true AND v.voter.id = :voterId AND CURRENT_TIMESTAMP BETWEEN v.electionStartDateTime AND v.electionEndDateTime")
+    public java.util.List<Voting> findByVoterIdAndEligibleForVoting(String voterId);
+
+    @Query("SELECT v FROM Voting v WHERE v.isActive = true AND v.voter.id = :voterId")
     public java.util.List<Voting> findByVoterId(String voterId);
 }
