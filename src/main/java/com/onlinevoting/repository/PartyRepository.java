@@ -8,4 +8,5 @@ import com.onlinevoting.model.Party;
 
 public interface PartyRepository extends JpaRepository<Party, Long> {
    public List<Party> findByIsActiveTrue();
+   Party findByIdAndIsActiveTrue(Long id);
 }

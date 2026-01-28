@@ -34,4 +34,12 @@ public class PartyService {
 
           return partyDtos;
     }
+
+    public Party getPartyById(Long partyId) {
+        Party party = partyRepository.findByIdAndIsActiveTrue(partyId);
+        if(party == null) {
+            throw new RuntimeException("Party not found with id: " + partyId);
+        }   
+        return party;
+    }            
 }

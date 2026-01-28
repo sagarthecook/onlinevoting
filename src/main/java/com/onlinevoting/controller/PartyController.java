@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,14 @@ public class PartyController {
         List<BaseDTO> parties = partyService.getAllParties();
       
         ApiResponse<List<BaseDTO>> response = new ApiResponse<>(true, parties, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/v1/party/{partyId}",  produces = "application/json")
+    public ResponseEntity<ApiResponse<Party>> getParty(@PathVariable Long partyId) {
+        Party party = partyService.getPartyById(partyId);
+      
+        ApiResponse<Party> response = new ApiResponse<>(true, party, null);
         return ResponseEntity.ok(response);
     }
 }

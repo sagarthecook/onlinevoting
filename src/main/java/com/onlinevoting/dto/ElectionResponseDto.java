@@ -24,7 +24,17 @@ public class ElectionResponseDto {
     private String city;
     private String officer;
     private String status;
+    private LocalDate formEndDate;
     private Boolean isPublish;
+    
+    public ElectionResponseDto(Long electionId, String electionName, LocalDate electionDate, LocalDate formEndDate, 
+        LocalDate resultDate) {
+        this.electionId = electionId;
+        this.electionName = electionName;
+        this.electionDate = electionDate;
+        this.resultDate = resultDate;
+        this.formEndDate = formEndDate;
+    }
     
     public ElectionResponseDto(Long electionId, String electionName, String status) {
         this.electionId = electionId;
@@ -32,8 +42,8 @@ public class ElectionResponseDto {
         this.status = status;
     }
     
-    public ElectionResponseDto(String coutry, String state, String city) {
-        this.country = coutry;
+    public ElectionResponseDto(String country, String state, String city) {
+        this.country = country;
         this.state = state;
         this.city = city;
     }
