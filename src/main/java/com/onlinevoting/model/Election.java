@@ -67,4 +67,7 @@ public class Election extends AuditDetail {
     @Column(name = "is_publish", nullable = false)
     private Boolean isPublish;
 
+    @Column(name = "is_result_publish", nullable = false ,columnDefinition = "bit(1) default b'0'")
+    private Boolean isResultPublish;
+
 }

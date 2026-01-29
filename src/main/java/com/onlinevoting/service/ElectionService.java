@@ -8,6 +8,7 @@ import com.onlinevoting.dto.CandidateResponseDTO;
 import com.onlinevoting.dto.CandidateVotingDetail;
 import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
+import com.onlinevoting.dto.ElectionResultDTO;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Candidate;
@@ -209,7 +210,9 @@ public class ElectionService {
              cityName,
             officerName,
             election.getStatus(),
-            null, election.getIsPublish()
+            null, 
+            election.getIsPublish(),
+            election.getIsResultPublish()
         );
     }
     
@@ -292,4 +295,66 @@ public class ElectionService {
         templateData.put("candidates", candidateVotingDetails);
         return templateData;
     }
+
+    public List<BaseDTO> getElectionToPublish() {
+
+      List<Election> publishedElections = electionRepository.findByIsPublishTrueAndIsResultPublishFalseAndIsActiveTrue();
+
+      return publishedElections.stream().filter(election-> election.getResultDate().equals(LocalDate.now()))
+            .map(election -> new BaseDTO(election.getId(), election.getElectionName()))
+            .toList();
+    }
+
+
+    public List<ElectionResultDTO> publishElectionResult(Long electionId) {
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+
+        List<Candidate> candidates = candidateService.getCandidateEntityByElectionId(electionId);
+
+        long totalVotes = votingService.getTotalVotesByElectionId(electionId);
+
+        List<ElectionResultDTO> results = candidates.stream().map(candidate -> {
+            Long votesReceived = votingService.getVotesForCandidateInElection(candidate.getId(), electionId);
+            ElectionResultDTO resultDTO = new ElectionResultDTO();
+            resultDTO.setCandidateId(candidate.getId());
+            resultDTO.setCandidateName(candidate.getFirstName() + " " +candidate.getMiddleName() + " " + candidate.getLastName());
+            resultDTO.setFirstName(candidate.getFirstName());
+            resultDTO.setLastName(candidate.getLastName());
+            resultDTO.setMiddleName(candidate.getMiddleName());
+            resultDTO.setVotes(votesReceived);
+            resultDTO.setPartyName(candidate.getParty().getName());
+            resultDTO.setCandidateImageUrl(candidate.getCandidatePhoto());
+            resultDTO.setPartyImageUrl(candidate.getParty().getLogoUrl());
+            if (totalVotes > 0) {
+                double percentage = (votesReceived.doubleValue() / totalVotes) * 100;
+                resultDTO.setPercentage(Math.round(percentage * 100.0) / 100.0); // Round to 2 decimal places
+            } else {
+                resultDTO.setPercentage(0.0);
+            }
+            return resultDTO;
+        }).collect(Collectors.toList());
+
+        // Determine winner
+        Long maxVotes = results.stream()
+            .mapToLong(ElectionResultDTO::getVotes)
+            .max()
+            .orElse(0L);
+
+        results.forEach(result -> {
+            if (result.getVotes().equals(maxVotes) && maxVotes > 0) {
+                result.setIsWinner(true);
+            } else {
+                result.setIsWinner(false);
+            }
+        });
+
+        // Update election to mark results as published
+        election.setIsResultPublish(true);
+        electionRepository.save(election);
+
+        return results;
+        
+    }   
 }
+

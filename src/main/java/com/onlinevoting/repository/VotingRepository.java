@@ -15,4 +15,6 @@ public interface VotingRepository extends JpaRepository<Voting, Long> {
 
     @Query("SELECT v FROM Voting v WHERE v.isActive = true AND v.voter.id = :voterId")
     public java.util.List<Voting> findByVoterId(String voterId);
+
+    public Long countByElection_IdAndCandidateIdIsNotNull(Long electionId);
 }
