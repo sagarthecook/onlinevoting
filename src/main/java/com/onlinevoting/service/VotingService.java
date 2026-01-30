@@ -68,6 +68,17 @@ public class VotingService {
         return votingDTOs;
     }
 
+    public Long getTotalVotesByElectionId(Long electionId) {
+        return votingRepository.countByElection_IdAndCandidateIdIsNotNull(electionId);
+    }
+
+    public Long getVotesForCandidateInElection(Long candidateId, Long electionId) {
+        List<Voting> votings = votingRepository.findAllByElection(electionId);
+        return votings.stream()
+                .filter(voting -> voting.getCandidateId() != null && voting.getCandidateId().equals(candidateId.toString()))
+                .count();
+    }
+
     public void voteCandidate(VotingDTO votingDTO) {
         Voting voting = votingRepository.findById(votingDTO.getVoterId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid voting ID: " + votingDTO.getVoterId()));

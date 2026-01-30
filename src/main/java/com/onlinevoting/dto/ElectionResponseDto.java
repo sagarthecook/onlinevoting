@@ -26,6 +26,7 @@ public class ElectionResponseDto {
     private String status;
     private LocalDate formEndDate;
     private Boolean isPublish;
+    private Boolean isResultPublish;
     
     public ElectionResponseDto(Long electionId, String electionName, LocalDate electionDate, LocalDate formEndDate, 
         LocalDate resultDate) {

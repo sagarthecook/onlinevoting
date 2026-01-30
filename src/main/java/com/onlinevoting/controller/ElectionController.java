@@ -17,6 +17,8 @@ import com.onlinevoting.dto.ApiResponse;
 import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionResponseDto;
+import com.onlinevoting.dto.ElectionResultDTO;
+import com.onlinevoting.dto.PublishResultRequest;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.service.ElectionService;
 
@@ -92,13 +94,26 @@ public class ElectionController {
         ApiResponse<String> response = new ApiResponse<>(true, "Election published successfully", null);
         return ResponseEntity.ok(response);
     }
-
+    
     @GetMapping(path="/v1/election/notification/{electionId}", produces = "application/json")
     public ResponseEntity<ApiResponse<String>> sendElectionNotification(@PathVariable Long  electionId) {
         electionService.sendElectionNotification(electionId);
         ApiResponse<String> response = new ApiResponse<>(true, "Election notification sent successfully", null);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping(path="/v1/election/publish_election_result", produces = "application/json")
+    public ResponseEntity<ApiResponse<List<ElectionResultDTO>>> publishResult(@RequestBody PublishResultRequest publishResultRequest) {   
+        List<ElectionResultDTO> elections = electionService.publishElectionResult(publishResultRequest.getElectionId());
+        ApiResponse<List<ElectionResultDTO>> response = new ApiResponse<>(true, elections, null);
+        return ResponseEntity.ok(response);
+    }
     
+    @GetMapping(path="/v1/election/getElectionForResult", produces = "application/json")
+    public ResponseEntity<ApiResponse<List<BaseDTO>>> getElectionsForResult() {   
+        List<BaseDTO> elections = electionService.getElectionToPublish();
+        ApiResponse<List<BaseDTO>> response = new ApiResponse<>(true, elections, null);
+        return ResponseEntity.ok(response);
+    }
 }
  

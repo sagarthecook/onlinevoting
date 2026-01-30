@@ -66,7 +66,6 @@ public class CandidateService {
                 .collect(Collectors.toList());
     }
 
-
     public List<CandidateResponseDTO> getCandidatebyStatus(String status) {
         if (status == null || status.isBlank()) {
             throw new IllegalArgumentException("Status parameter is required.");
