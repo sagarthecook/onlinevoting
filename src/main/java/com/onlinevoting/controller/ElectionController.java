@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onlinevoting.dto.ApiResponse;
 import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.ElectionAddressDTO;
+import com.onlinevoting.dto.ElectionDataPoint;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.ElectionResultDTO;
 import com.onlinevoting.dto.PublishResultRequest;
@@ -115,5 +116,19 @@ public class ElectionController {
         ApiResponse<List<BaseDTO>> response = new ApiResponse<>(true, elections, null);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping(path="/v1/election/getElectionsForShowResult", produces = "application/json")
+    public ResponseEntity<ApiResponse<List<BaseDTO>>> getElectionsForShowResult() {
+         List<BaseDTO> elections  = electionService.getElectionsForShowResult();
+        ApiResponse<List<BaseDTO>> response = new ApiResponse<>(true, elections, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path="/v1/election/datapoint", produces = "application/json")
+    public ResponseEntity<ApiResponse<ElectionDataPoint>> getElectionDataPoint() {
+        ElectionDataPoint dataPoints = electionService.getElectionDataPoint();
+        ApiResponse<ElectionDataPoint> response = new ApiResponse<>(true, dataPoints, null);
+        return ResponseEntity.ok(response);
+    }
+
 }
- 
