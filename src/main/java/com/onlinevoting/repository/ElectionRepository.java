@@ -15,4 +15,9 @@ public interface ElectionRepository extends JpaRepository<Election, Long> {
     public List<Election> findByStatusAndIsActiveTrue(String status);
     
     public List<Election> findByIsPublishTrueAndIsResultPublishFalseAndIsActiveTrue();
+<<<<<<< HEAD
+=======
+
+    public List<Election> findByIsPublishTrueAndIsResultPublishTrueAndIsActiveTrue();
+>>>>>>> 898847ce2feb7bb801baf549e336286a78ba0f91
 }

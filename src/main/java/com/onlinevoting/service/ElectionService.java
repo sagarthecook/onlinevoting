@@ -7,14 +7,17 @@ import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.CandidateResponseDTO;
 import com.onlinevoting.dto.CandidateVotingDetail;
 import com.onlinevoting.dto.ElectionAddressDTO;
+import com.onlinevoting.dto.ElectionDataPoint;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.ElectionResultDTO;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Candidate;
 import com.onlinevoting.model.Election;
+import com.onlinevoting.model.ElectionResult;
 import com.onlinevoting.model.UserDetail;
 import com.onlinevoting.repository.ElectionRepository;
+import com.onlinevoting.repository.ElectionResultRepository;
 import com.onlinevoting.repository.UserDetailRepository;
 
 import lombok.extern.log4j.Log4j2;
@@ -43,11 +46,12 @@ public class ElectionService {
     private final UserDetailRepository userDetailRepository;
     private final CandidateService candidateService;
     private final VotingService votingService;
+    private final ElectionResultRepository electionResultRepository;
 
     public ElectionService(ElectionRepository electionRepository, CountryService countryService, 
         StateService stateService, CityService cityService, UserDetailService userDetailService, 
         EmailService emailService, UserDetailRepository userDetailRepository,
-        CandidateService candidateService, VotingService votingService) {
+        CandidateService candidateService, VotingService votingService, ElectionResultRepository electionResultRepository) {
         this.electionRepository = electionRepository;
         this.countryService = countryService;
         this.stateService = stateService;
@@ -57,6 +61,7 @@ public class ElectionService {
         this.userDetailRepository = userDetailRepository;
         this.candidateService = candidateService;
         this.votingService = votingService;
+        this.electionResultRepository = electionResultRepository;
         this.objectMapper = new ObjectMapper();
         // Configure ObjectMapper to handle LocalDate properly
         this.objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
@@ -125,6 +130,7 @@ public class ElectionService {
             electionObject.setActive(true);
             electionObject.setStatus(Status.PENDING.getDisplayName());
             electionObject.setIsPublish(false);
+            electionObject.setIsResultPublish(false);
             electionObject.setNote("");
             if(electionObject.getElectionDate().isAfter(electionObject.getResultDate())) {
                 throw new IllegalArgumentException("Election date must be before result date.");
@@ -132,6 +138,7 @@ public class ElectionService {
             if(electionObject.getFormEndDate().isAfter(electionObject.getElectionDate())) {
                 throw new IllegalArgumentException("Form end date must be before election date.");
             }
+
             // Save the election object to database
             return electionRepository.save(electionObject);
             
@@ -305,6 +312,15 @@ public class ElectionService {
             .toList();
     }
 
+<<<<<<< HEAD
+=======
+    public List<BaseDTO> getElectionsForShowResult() {
+      List<Election> electionsForResult = electionRepository.findByIsPublishTrueAndIsResultPublishTrueAndIsActiveTrue();
+
+      return electionsForResult.stream().map(election -> new BaseDTO(election.getId(), election.getElectionName()))
+            .toList();
+    }
+>>>>>>> 898847ce2feb7bb801baf549e336286a78ba0f91
 
     public List<ElectionResultDTO> publishElectionResult(Long electionId) {
         Election election = electionRepository.findById(electionId)
@@ -332,6 +348,22 @@ public class ElectionService {
             } else {
                 resultDTO.setPercentage(0.0);
             }
+<<<<<<< HEAD
+=======
+               // Save election results to database
+        ElectionResult electionResult = new ElectionResult();
+        electionResult.setElection(election);
+        electionResult.setCandidate(candidate);
+        electionResult.setParty(candidate.getParty());
+        electionResult.setVotesReceived(votesReceived);
+        electionResult.setTotalElectionVoted(totalVotes);
+        electionResult.setActive(true);
+        electionResult.setCreatedBy("system");
+        electionResult.setUpdatedDate(java.time.LocalDateTime.now());
+        electionResult.setUpdateBy("system");
+        electionResult.setCreatedDate(java.time.LocalDateTime.now());
+        electionResultRepository.save(electionResult);
+>>>>>>> 898847ce2feb7bb801baf549e336286a78ba0f91
             return resultDTO;
         }).collect(Collectors.toList());
 
@@ -352,9 +384,32 @@ public class ElectionService {
         // Update election to mark results as published
         election.setIsResultPublish(true);
         electionRepository.save(election);
+<<<<<<< HEAD
 
         return results;
         
     }   
+=======
+     
+        return results;
+        
+    }   
+
+   public ElectionDataPoint getElectionDataPoint() {
+        Long totalElections = electionRepository.count();
+        Long totalElectionApproved = electionRepository.findByStatus(Status.APPROVED.getDisplayName()).stream().count();
+        Long totalElectionunApproved = totalElections - totalElectionApproved;
+        Long totalElectionResultPublished = electionRepository.findByIsPublishTrueAndIsResultPublishTrueAndIsActiveTrue().stream().count();
+        Long totalElectionResultUnPublished = electionRepository.findByIsPublishTrueAndIsResultPublishFalseAndIsActiveTrue().stream().count();
+
+        return new ElectionDataPoint(
+            totalElections,
+            totalElectionApproved,
+            totalElectionResultPublished,
+            totalElectionResultUnPublished,
+            totalElectionunApproved
+        );
+    }
+>>>>>>> 898847ce2feb7bb801baf549e336286a78ba0f91
 }
 
