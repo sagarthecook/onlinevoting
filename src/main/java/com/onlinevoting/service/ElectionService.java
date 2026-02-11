@@ -312,15 +312,13 @@ public class ElectionService {
             .toList();
     }
 
-<<<<<<< HEAD
-=======
     public List<BaseDTO> getElectionsForShowResult() {
       List<Election> electionsForResult = electionRepository.findByIsPublishTrueAndIsResultPublishTrueAndIsActiveTrue();
 
       return electionsForResult.stream().map(election -> new BaseDTO(election.getId(), election.getElectionName()))
             .toList();
     }
->>>>>>> 898847ce2feb7bb801baf549e336286a78ba0f91
+
 
     public List<ElectionResultDTO> publishElectionResult(Long electionId) {
         Election election = electionRepository.findById(electionId)
@@ -348,8 +346,7 @@ public class ElectionService {
             } else {
                 resultDTO.setPercentage(0.0);
             }
-<<<<<<< HEAD
-=======
+
                // Save election results to database
         ElectionResult electionResult = new ElectionResult();
         electionResult.setElection(election);
@@ -363,7 +360,6 @@ public class ElectionService {
         electionResult.setUpdateBy("system");
         electionResult.setCreatedDate(java.time.LocalDateTime.now());
         electionResultRepository.save(electionResult);
->>>>>>> 898847ce2feb7bb801baf549e336286a78ba0f91
             return resultDTO;
         }).collect(Collectors.toList());
 
@@ -384,12 +380,10 @@ public class ElectionService {
         // Update election to mark results as published
         election.setIsResultPublish(true);
         electionRepository.save(election);
-<<<<<<< HEAD
 
-        return results;
-        
-    }   
-=======
+
+      
+
      
         return results;
         
@@ -410,6 +404,5 @@ public class ElectionService {
             totalElectionunApproved
         );
     }
->>>>>>> 898847ce2feb7bb801baf549e336286a78ba0f91
 }
 

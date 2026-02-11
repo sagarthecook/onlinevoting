@@ -116,10 +116,9 @@ public class ElectionController {
         ApiResponse<List<BaseDTO>> response = new ApiResponse<>(true, elections, null);
         return ResponseEntity.ok(response);
     }
-<<<<<<< HEAD
-}
- 
-=======
+
+
+
 
     @GetMapping(path="/v1/election/getElectionsForShowResult", produces = "application/json")
     public ResponseEntity<ApiResponse<List<BaseDTO>>> getElectionsForShowResult() {
@@ -134,6 +133,4 @@ public class ElectionController {
         ApiResponse<ElectionDataPoint> response = new ApiResponse<>(true, dataPoints, null);
         return ResponseEntity.ok(response);
     }
-
 }
->>>>>>> 898847ce2feb7bb801baf549e336286a78ba0f91
