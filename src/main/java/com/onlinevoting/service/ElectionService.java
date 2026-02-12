@@ -383,6 +383,33 @@ public class ElectionService {
         
     }   
 
+
+    // TO GET THE RESULT
+    public List<ElectionResultDTO> getElectionResult(Long electionId) {
+
+        List<ElectionResult> electionResults = electionResultRepository.findByElectionId(electionId);
+
+        return electionResults.stream().map(result -> {
+            ElectionResultDTO resultDTO = new ElectionResultDTO();
+            resultDTO.setCandidateId(result.getCandidate().getId());
+            resultDTO.setCandidateName(result.getCandidate().getFirstName() + " " +result.getCandidate().getMiddleName() + " " + result.getCandidate().getLastName());
+            resultDTO.setFirstName(result.getCandidate().getFirstName());
+            resultDTO.setLastName(result.getCandidate().getLastName());
+            resultDTO.setMiddleName(result.getCandidate().getMiddleName());
+            resultDTO.setVotes(result.getVotesReceived());
+            resultDTO.setPartyName(result.getParty().getName());
+            resultDTO.setCandidateImageUrl(result.getCandidate().getCandidatePhoto());
+            resultDTO.setPartyImageUrl(result.getParty().getLogoUrl());
+            if (result.getTotalElectionVoted() > 0) {
+                double percentage = (result.getVotesReceived().doubleValue() / result.getTotalElectionVoted()) * 100;
+                resultDTO.setPercentage(Math.round(percentage * 100.0) / 100.0); // Round to 2 decimal places
+            } else {
+                resultDTO.setPercentage(0.0);
+            }
+            return resultDTO;
+        }).collect(Collectors.toList());
+    }   
+
    public ElectionDataPoint getElectionDataPoint() {
         Long totalElections = electionRepository.count();
         Long totalElectionApproved = electionRepository.findByStatus(Status.APPROVED.getDisplayName()).stream().count();

@@ -131,4 +131,11 @@ public class ElectionController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(path="/v1/election/getResult/{electionId}", produces = "application/json")
+    public ResponseEntity<ApiResponse<List<ElectionResultDTO>>> getResult(@PathVariable Long electionId) {   
+        List<ElectionResultDTO> elections = electionService.getElectionResult(electionId);
+        ApiResponse<List<ElectionResultDTO>> response = new ApiResponse<>(true, elections, null);
+        return ResponseEntity.ok(response);
+    }
+
 }
