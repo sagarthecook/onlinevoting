@@ -1,16 +1,5 @@
 package com.onlinevoting.service;
 
-import com.onlinevoting.constants.EmailConstants;
-import com.onlinevoting.dto.BaseDTO;
-import com.onlinevoting.dto.UserDetailDTO;
-import com.onlinevoting.dto.UserProfileUpdateDTO;
-import com.onlinevoting.enums.Status;
-import com.onlinevoting.model.UserDetail;
-import com.onlinevoting.repository.UserDetailRepository;
-import com.onlinevoting.util.UserContextHelper;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,6 +10,17 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.onlinevoting.constants.EmailConstants;
+import com.onlinevoting.dto.BaseDTO;
+import com.onlinevoting.dto.UserDetailDTO;
+import com.onlinevoting.dto.UserProfileUpdateDTO;
+import com.onlinevoting.enums.Status;
+import com.onlinevoting.model.UserDetail;
+import com.onlinevoting.repository.UserDetailRepository;
+import com.onlinevoting.util.UserContextHelper;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -254,13 +254,13 @@ public class UserDetailService {
           if(status == null) {
                throw new IllegalArgumentException("Status parameter is required.");
           } else if (status.equals(Status.APPROVED.getDisplayName())) {
-               List<Object[]> newuserDetails = userDetailRepository.findByIsActiveAndStatus(Boolean.TRUE,status);
+               List<Object[]> newuserDetails = userDetailRepository.findByRoleIdAndIsActiveAndStatus(3L, Boolean.TRUE, status);
                for (Object[] obj : newuserDetails) {
                     userDetails.add(createUserDetailDTO(obj));
                }
           }else if (status.equals(Status.REJECTED.getDisplayName()) || status.equals(Status.PENDING.getDisplayName())) {
-                  List<Object[]> newuserDetails = userDetailRepository.findByIsActiveAndStatus(Boolean.FALSE,status);
-               for (Object[] obj : newuserDetails) {
+                  List<Object[]> newuserDetails = userDetailRepository.findByRoleIdAndIsActiveAndStatus(3L, Boolean.FALSE, status);
+                  for (Object[] obj : newuserDetails) {
                     userDetails.add(createUserDetailDTO(obj));
                }
           }
@@ -268,15 +268,43 @@ public class UserDetailService {
           return userDetails;
      }
 
-      private UserDetailDTO createUserDetailDTO(Object[] obj) {
+     
+     public List<UserDetailDTO> getAllPendingApprovalManagement(String status, String orderBy, String order ) {
+          List<UserDetailDTO> userDetails = new ArrayList<>();
+         
+          if(status == null) {
+               throw new IllegalArgumentException("Status parameter is required.");
+          } else if (status.equals(Status.APPROVED.getDisplayName())) {
+               List<Object[]> newuserDetails = userDetailRepository.findByIsActiveAndStatus(Boolean.TRUE, status);
+               for (Object[] obj : newuserDetails) {
+                    if(createUserDetailDTO(obj, 3L)!=null) {
+                          userDetails.add(createUserDetailDTO(obj, 3L));
+                    }
+               
+               }
+          }else if (status.equals(Status.REJECTED.getDisplayName()) || status.equals(Status.PENDING.getDisplayName())) {
+                  List<Object[]> newuserDetails = userDetailRepository.findByIsActiveAndStatus( Boolean.FALSE, status);
+                  for (Object[] obj : newuserDetails) {
+                       if(createUserDetailDTO(obj, 3L)!=null) {
+                          userDetails.add(createUserDetailDTO(obj, 3L));
+                    }               }
+          }
+
+          return userDetails;
+     }
+
+      private UserDetailDTO createUserDetailDTO(Object[] obj,Long roleId) {
+          UserDetailDTO detailDTO = null;
             String dobStr = null;
+            if((Long)obj[9]!=roleId) {
+           
             if (obj[5] != null && obj[5] instanceof java.sql.Date) {
                  dobStr = obj[5].toString(); // or use a formatter if you want a specific format
             } else if (obj[5] != null) {
                  dobStr = obj[5].toString();
             }
             String adharStr = obj[6] != null ? obj[6].toString() : null;
-            return new UserDetailDTO(
+             detailDTO = new UserDetailDTO(
                String.valueOf(obj[0]), // id
                  (String) obj[1], // firstName
                  (String) obj[2], // lastName
@@ -287,6 +315,32 @@ public class UserDetailService {
                  (String) obj[7]  ,
                  (String) obj[8]  // profilePhoto
             );
+          }
+          return detailDTO;
+      }
+
+       private UserDetailDTO createUserDetailDTO(Object[] obj) {
+          UserDetailDTO detailDTO = null;
+            String dobStr = null;
+           
+            if (obj[5] != null && obj[5] instanceof java.sql.Date) {
+                 dobStr = obj[5].toString(); // or use a formatter if you want a specific format
+            } else if (obj[5] != null) {
+                 dobStr = obj[5].toString();
+            }
+            String adharStr = obj[6] != null ? obj[6].toString() : null;
+             detailDTO = new UserDetailDTO(
+               String.valueOf(obj[0]), // id
+                 (String) obj[1], // firstName
+                 (String) obj[2], // lastName
+                 (String) obj[3], // emailid
+                 (String) obj[4], // phoneNumber
+                 dobStr,          // dateOfBirth as String
+                 adharStr,        // aadharNumber as String
+                 (String) obj[7]  ,
+                 (String) obj[8]  // profilePhoto
+            );
+          return detailDTO;
       }
 
       public List<BaseDTO> getAllUsersByRole(Long roleId) {

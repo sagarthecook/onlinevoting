@@ -87,6 +87,14 @@ public class UserDetailsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(path = "/v1/user_detail/findbyStatusforManagement", produces = { "application/json"})
+    public ResponseEntity<ApiResponse<List<UserDetailDTO>>> findbyStatusforManagement(
+        @RequestParam String status, @RequestParam String orderBy, @RequestParam String order) {
+        List<UserDetailDTO> userDetails = userDetailService.getAllPendingApprovalManagement(status, orderBy, order);
+        ApiResponse<List<UserDetailDTO>> response = new ApiResponse<>(true, userDetails, null);
+        return ResponseEntity.ok(response);
+    }
+
     @PatchMapping(path = "/v1/user_detail/approve/{id}")
     public ResponseEntity<ApiResponse<String>> approveUser(@PathVariable Long id, @RequestBody StatusUpdateRequestDTO statusUpdateRequest ) {
         userDetailService.approveUser(id, statusUpdateRequest.getStatus());

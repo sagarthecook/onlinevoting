@@ -18,8 +18,11 @@ public interface UserDetailRepository extends JpaRepository<UserDetail, Long> {
 
     List<UserDetail> findByIsActiveFalse();
 
-    @Query("SELECT userDetail.id, userDetail.firstName, userDetail.lastName, userDetail.emailId, userDetail.phoneNo, userDetail.dob, userDetail.aadharNumber, userDetail.status, userDetail.docsUrl FROM UserDetail userDetail WHERE userDetail.isActive = :isActive AND userDetail.status = :status")
+    @Query("SELECT userDetail.id, userDetail.firstName, userDetail.lastName, userDetail.emailId, userDetail.phoneNo, userDetail.dob, userDetail.aadharNumber, userDetail.status, userDetail.docsUrl, userDetail.role.id FROM UserDetail userDetail WHERE userDetail.isActive = :isActive AND userDetail.status = :status")
     List<Object[]> findByIsActiveAndStatus(Boolean isActive, String status);
+
+    @Query("SELECT userDetail.id, userDetail.firstName, userDetail.lastName, userDetail.emailId, userDetail.phoneNo, userDetail.dob, userDetail.aadharNumber, userDetail.status, userDetail.docsUrl, userDetail.role.id FROM UserDetail userDetail WHERE userDetail.isActive = :isActive AND userDetail.status = :status AND userDetail.role.id = :roleId")
+    List<Object[]> findByRoleIdAndIsActiveAndStatus( Long roleId,Boolean isActive, String status);
 
     @Query("SELECT userDetail.id, CONCAT(userDetail.firstName, ' ', userDetail.lastName) FROM UserDetail userDetail WHERE userDetail.isActive = :isActive AND userDetail.status = :status AND userDetail.role.id = :roleId")
     List<Object[]> findByIsActiveAndStatusAndRoleId(Boolean isActive, String status, Long roleId);

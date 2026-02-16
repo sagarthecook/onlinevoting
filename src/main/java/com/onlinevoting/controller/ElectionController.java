@@ -19,6 +19,7 @@ import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionDataPoint;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.ElectionResultDTO;
+import com.onlinevoting.dto.ElectionResultMainDTO;
 import com.onlinevoting.dto.PublishResultRequest;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.service.ElectionService;
@@ -132,9 +133,9 @@ public class ElectionController {
     }
 
     @GetMapping(path="/v1/election/getResult/{electionId}", produces = "application/json")
-    public ResponseEntity<ApiResponse<List<ElectionResultDTO>>> getResult(@PathVariable Long electionId) {   
-        List<ElectionResultDTO> elections = electionService.getElectionResult(electionId);
-        ApiResponse<List<ElectionResultDTO>> response = new ApiResponse<>(true, elections, null);
+    public ResponseEntity<ApiResponse<ElectionResultMainDTO>> getResult(@PathVariable Long electionId) {   
+        ElectionResultMainDTO electionResult = electionService.getElectionResult(electionId);
+        ApiResponse<ElectionResultMainDTO> response = new ApiResponse<>(true, electionResult, null);
         return ResponseEntity.ok(response);
     }
 

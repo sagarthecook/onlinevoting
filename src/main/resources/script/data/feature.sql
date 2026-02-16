@@ -10,7 +10,7 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 
 -- Election Officer Features
 (7, 'Election Creation', 'Manage elections', 2, 'Election Management', 'create_election', 'fas fa-vote-yea', 1),
-(8, 'Candidate Management', 'Manage candidates', 2, 'Election Management', '/officer/candidates', 'fas fa-user-tie', 1),
+(8, 'Management Approval', 'Management Approval', 2, 'Election Management', 'management_approval', 'fas fa-user-tie', 1),
 (9, 'Voter Verification', 'Verify voter eligibility', 2, 'Election Management', 'voter_verification', 'fas fa-user-check', 1),
 (10, 'Election Results', 'View and manage results', 2, 'Election Management', 'publish_result', 'fas fa-trophy', 1),
 (11, 'Election Statistics', 'View election statistics', 2, 'Election Management', '/officer/statistics', 'fas fa-chart-pie', 1),
