@@ -42,6 +42,19 @@ public class UserDetailService {
                throw new IllegalArgumentException("User with account for email " + emailId + " already exists.");
           }
 
+          if(userDetail.getAadharNumber()==null || userDetail.getAadharNumber().toString().isEmpty()) {
+               throw new IllegalArgumentException("Aadhar number is required.");
+          }else if(userDetail.getAadharNumber()!=null && userDetail.getAadharNumber().toString().length()!=12) {
+               throw new IllegalArgumentException("Aadhar number must be 12 digits.");
+          }else {
+              UserDetail detail = userDetailRepository.findByAadharNumberAndIsActiveTrueAndStatus(userDetail.getAadharNumber(), Status.APPROVED.getDisplayName());
+              if (detail != null) {
+                   throw new IllegalArgumentException("Aadhar number is already in use. Please contact to administrator. Email - election.gov@gmail.com");
+              }
+          }
+
+
+
           UserDetail newUserDetail = new UserDetail(userDetail.getFirstName(), userDetail.getLastName(),
                     userDetail.getMiddleName(), userDetail.getEmailId(), userDetail.getPhoneNo(),
                     userDetail.getAddress(),

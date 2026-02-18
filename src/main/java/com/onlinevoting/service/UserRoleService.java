@@ -25,7 +25,7 @@ public class UserRoleService {
     public List<BaseDTO> getAllUserRoles() {
        List<BaseDTO> baseDTOs =  new ArrayList<>();
 
-       List<UserRole> roles = userRoleRepository.findAll();
+       List<UserRole> roles = userRoleRepository.findByIsActiveTrue();
         for(UserRole role : roles){
             baseDTOs.add(new BaseDTO(role.getId(), role.getName()));
         }

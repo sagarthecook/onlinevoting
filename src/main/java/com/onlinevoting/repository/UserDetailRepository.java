@@ -6,6 +6,7 @@ import com.onlinevoting.model.UserDetail;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -35,6 +36,8 @@ public interface UserDetailRepository extends JpaRepository<UserDetail, Long> {
     
     @Query("SELECT u FROM UserDetail u WHERE u.isActive = true AND u.status = 'Approved' AND u.role.id = 3 AND u.address.cityId.id = :cityId")
     List<UserDetail> findActiveVoters(Long cityId);
+
+    public UserDetail findByAadharNumberAndIsActiveTrueAndStatus(Long aadharNumber, String status);
 }
 
 
