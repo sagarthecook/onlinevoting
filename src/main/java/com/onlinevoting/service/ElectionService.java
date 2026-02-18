@@ -10,6 +10,7 @@ import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionDataPoint;
 import com.onlinevoting.dto.ElectionResponseDto;
 import com.onlinevoting.dto.ElectionResultDTO;
+import com.onlinevoting.dto.ElectionResultMainDTO;
 import com.onlinevoting.dto.StatusUpdateRequestDTO;
 import com.onlinevoting.enums.Status;
 import com.onlinevoting.model.Candidate;
@@ -24,6 +25,7 @@ import lombok.extern.log4j.Log4j2;
 
 import com.onlinevoting.constants.EmailConstants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.format.DateTimeFormatter;
@@ -387,6 +389,43 @@ public class ElectionService {
      
         return results;
         
+    }   
+
+
+    // TO GET THE RESULT
+    public ElectionResultMainDTO getElectionResult(Long electionId) {
+        List<ElectionResultDTO> resultList = new ArrayList<>();
+
+        List<ElectionResult> electionResults = electionResultRepository.findByElectionId(electionId);
+        Election election = electionRepository.findById(electionId)
+            .orElseThrow(() -> new IllegalArgumentException("Election not found with id: " + electionId));
+            
+        resultList = electionResults.stream().map(result -> {
+            ElectionResultDTO resultDTO = new ElectionResultDTO();
+            resultDTO.setCandidateId(result.getCandidate().getId());
+            resultDTO.setCandidateName(result.getCandidate().getFirstName() + " " +result.getCandidate().getMiddleName() + " " + result.getCandidate().getLastName());
+            resultDTO.setFirstName(result.getCandidate().getFirstName());
+            resultDTO.setLastName(result.getCandidate().getLastName());
+            resultDTO.setMiddleName(result.getCandidate().getMiddleName());
+            resultDTO.setVotes(result.getVotesReceived());
+            resultDTO.setPartyName(result.getParty().getName());
+            resultDTO.setCandidateImageUrl(result.getCandidate().getCandidatePhoto());
+            resultDTO.setPartyImageUrl(result.getParty().getLogoUrl());
+            if (result.getTotalElectionVoted() > 0) {
+                double percentage = (result.getVotesReceived().doubleValue() / result.getTotalElectionVoted()) * 100;
+                resultDTO.setPercentage(Math.round(percentage * 100.0) / 100.0); // Round to 2 decimal places
+            } else {
+                resultDTO.setPercentage(0.0);
+            }
+            return resultDTO;
+        }).collect(Collectors.toList());
+
+        ElectionResultMainDTO electionResultMainDTO = new ElectionResultMainDTO();
+        electionResultMainDTO.setElectionName(election.getElectionName());
+        electionResultMainDTO.setElectionDate(election.getElectionDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        electionResultMainDTO.setElectionResultDate(election.getResultDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        electionResultMainDTO.setElectionResults(resultList);
+        return electionResultMainDTO;
     }   
 
    public ElectionDataPoint getElectionDataPoint() {
