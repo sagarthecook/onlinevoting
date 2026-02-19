@@ -22,3 +22,7 @@ INSERT INTO role_feature_mapping(role_id, feature_id, is_active) VALUES
 
 -- Logout feature for all roles
 (1, 22, 1), (2, 22, 1), (3, 22, 1), (4, 22, 1), (5, 22, 1), (6, 22, 1);
+
+DELETE from role_feature_mapping where feature_id in (16,17,18,19,20,21);
+
+DELETE from role_feature_mapping where role_id in (1,2) and feature_id in (11,12,14,15,25,1,2,3,4,5,6);
