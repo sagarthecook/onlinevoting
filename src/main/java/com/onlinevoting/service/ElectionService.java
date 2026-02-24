@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.onlinevoting.dto.BaseDTO;
 import com.onlinevoting.dto.CandidateResponseDTO;
 import com.onlinevoting.dto.CandidateVotingDetail;
+import com.onlinevoting.dto.CandidateWinnerDTO;
 import com.onlinevoting.dto.ElectionAddressDTO;
 import com.onlinevoting.dto.ElectionDataPoint;
 import com.onlinevoting.dto.ElectionResponseDto;
@@ -341,6 +342,7 @@ public class ElectionService {
             resultDTO.setPartyName(candidate.getParty().getName());
             resultDTO.setCandidateImageUrl(candidate.getCandidatePhoto());
             resultDTO.setPartyImageUrl(candidate.getParty().getLogoUrl());
+            resultDTO.setEmail(candidate.getEmailId());
             if (totalVotes > 0) {
                 double percentage = (votesReceived.doubleValue() / totalVotes) * 100;
                 resultDTO.setPercentage(Math.round(percentage * 100.0) / 100.0); // Round to 2 decimal places
@@ -369,8 +371,34 @@ public class ElectionService {
             .max()
             .orElse(0L);
 
+       
+
+        // if two candidat having same votes then both will be winner
         results.forEach(result -> {
             if (result.getVotes().equals(maxVotes) && maxVotes > 0) {
+                CandidateWinnerDTO candidateWinnerDTO = new CandidateWinnerDTO();
+                candidateWinnerDTO.setCandidateName(result.getCandidateName());
+                candidateWinnerDTO.setPartyName(result.getPartyName());
+                candidateWinnerDTO.setVotesReceived(result.getVotes());
+                candidateWinnerDTO.setTotalVotes(totalVotes);
+                candidateWinnerDTO.setVotePercentage(result.getPercentage());
+                candidateWinnerDTO.setElectionName(election.getElectionName());
+
+                Map<String, Object> emailModel = new HashMap<>();
+                emailModel.put("candidateName", candidateWinnerDTO.getCandidateName());
+                emailModel.put("partyName", candidateWinnerDTO.getPartyName());
+                emailModel.put("votesReceived", candidateWinnerDTO.getVotesReceived());
+                emailModel.put("totalVotes", candidateWinnerDTO.getTotalVotes());
+                emailModel.put("votePercentage", candidateWinnerDTO.getVotePercentage());
+                emailModel.put("electionName", candidateWinnerDTO.getElectionName());
+                    try {
+                        log.info("Sending election result email to " + result.getEmail());
+                    emailService.sendEmailWithTemplate(result.getEmail(), EmailConstants.ELECTION_RESULT_SUBJECT, EmailConstants.ELECTION_RESULT_TEMPLATE,
+                                    emailModel);
+                    }catch(Exception e) {
+                        log.error("Error sending election result email to " + result.getEmail() + ": " + e.getMessage());
+                    }
+             
                 result.setIsWinner(true);
             } else {
                 result.setIsWinner(false);

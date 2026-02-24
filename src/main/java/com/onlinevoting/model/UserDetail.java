@@ -60,6 +60,10 @@ public class UserDetail extends AuditDetail {
     @Column(name = "docs_url", length = 512)
     @NotNull(message = "Documents is required")
     private String docsUrl;
+
+    @Column(name = "aadhar_docs_url", length = 512)
+    @NotNull(message = "Aadhar documents is required")
+    private String aadharDocsUrl;
     
     @Column(name = "status", length = 20)
     private String status;
@@ -68,7 +72,7 @@ public class UserDetail extends AuditDetail {
     }
 
     public UserDetail(String firstName, String lastName, String middleName, String emailId, String phoneNo, Address address,
-                      Date dob, Long aadharNumber,String docsUrl, UserRole role) {
+                      Date dob, Long aadharNumber,String docsUrl,String aadharDocsUrl, UserRole role) {
         super();
         if (firstName == null || firstName.isBlank()) throw new IllegalArgumentException("First name is required");
         if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Last name is required");
@@ -88,6 +92,7 @@ public class UserDetail extends AuditDetail {
         this.dob = dob;
         this.aadharNumber = aadharNumber;
         this.docsUrl = docsUrl;
+        this.aadharDocsUrl = aadharDocsUrl;
         this.role = role;
     }
 
@@ -195,5 +200,8 @@ public class UserDetail extends AuditDetail {
 
     public String getDocsUrl() {
         return docsUrl;
+    }
+    public String getAadharDocsUrl() {
+        return aadharDocsUrl;
     }
 }

@@ -17,5 +17,7 @@ public interface EmailConstants {
     public static String UPDATE_PROFILE_TEMPLATE = "update_profile.ftl";
     public static String VOTE_CONFIRMATION_SUBJECT = "Vote Confirmation - Online Voting System";
     public static String VOTE_CONFIRMATION_TEMPLATE = "vote_confirmation_template.ftl";
+    public static String ELECTION_RESULT_SUBJECT = "Election Result Announcement - Online Voting System";
+    public static String ELECTION_RESULT_TEMPLATE = "candidate_winner_notification.ftl";
     
 }

@@ -58,8 +58,8 @@ public class UserDetailService {
           UserDetail newUserDetail = new UserDetail(userDetail.getFirstName(), userDetail.getLastName(),
                     userDetail.getMiddleName(), userDetail.getEmailId(), userDetail.getPhoneNo(),
                     userDetail.getAddress(),
-                    userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getDocsUrl(), userDetail.getRole());
-
+                    userDetail.getDob(), userDetail.getAadharNumber(), userDetail.getDocsUrl(), 
+                    userDetail.getAadharDocsUrl(), userDetail.getRole());
           newUserDetail.setActive(false);
           newUserDetail.setStatus(Status.PENDING.getDisplayName());
 
@@ -184,6 +184,7 @@ public class UserDetailService {
           profile.setDob(detail.getDob().toString());
           profile.setAadharNumber(detail.getAadharNumber().toString());
           profile.setDocsUrl(detail.getDocsUrl());
+          profile.setAadharDocsUrl(detail.getAadharDocsUrl());
           profile.setStatus(detail.getStatus());
           profile.setStreet(detail.getAddress().getStreet());
           profile.setZipCode(detail.getAddress().getZipCode());
