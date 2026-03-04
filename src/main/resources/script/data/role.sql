@@ -4,5 +4,7 @@ INSERT INTO role(id, name, description) VALUES
 (3, 'VOTER', 'Registered voter who can participate in elections'),
 (4, 'MODERATOR', 'Moderator who can oversee voting process'),
 (5, 'CANDIDATE', 'Person who is running for election'),
-(6, 'OBSERVER', 'Election observer with read-only access'),
-(7, 'COLLECTOR', 'Who collects and verifies votes');
+(6, 'OBSERVER', 'Election observer with read-only access');
+
+
+UPDATE role SET is_active = false WHERE id IN ( 4, 5, 6);
