@@ -22,4 +22,5 @@ public class ElectionResultDTO {
     private Double percentage;
     private String candidateImageUrl;
     private String partyImageUrl;
+    private String email;
 }

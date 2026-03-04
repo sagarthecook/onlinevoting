@@ -39,3 +39,4 @@ INSERT INTO feature(id, name, description, menu_id, menu_name, url, icon, is_act
 
 -- Profile/Auth Features (available to all roles)
 (22, 'Logout', 'Sign out of the system', 3, 'Profile', '/logout', 'fas fa-sign-out-alt', 1);
+DELETE from feature where id in (16,17,18,19,20,21,1,2,3,4,5,6);

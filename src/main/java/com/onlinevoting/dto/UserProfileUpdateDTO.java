@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
 
 @Getter
 @Setter
@@ -46,6 +45,9 @@ public class UserProfileUpdateDTO {
     @Size(max = 512, message = "Document URL cannot exceed 512 characters")
     private String docsUrl;
     
+    @Size(max = 512, message = "Aadhar document URL cannot exceed 512 characters")
+    private String aadharDocsUrl;
+    
     @Size(max = 20, message = "Status cannot exceed 20 characters")
     private String status;
     
@@ -83,7 +85,7 @@ public class UserProfileUpdateDTO {
      * Constructor with all required fields for profile update
      */
     public UserProfileUpdateDTO(Long userId, String firstName, String lastName, String emailId, 
-                               String phoneNo, String dob, String aadharNumber, Long roleId, 
+                               String phoneNo, String dob, String aadharNumber, String aadharDocsUrl, Long roleId, 
                                String street, Long countryId, Long stateId, Long cityId, String zipCode) {
         this.userId = userId;
         this.firstName = firstName;
@@ -92,6 +94,7 @@ public class UserProfileUpdateDTO {
         this.phoneNo = phoneNo;
         this.dob = dob;
         this.aadharNumber = aadharNumber;
+        this.aadharDocsUrl = aadharDocsUrl;
         this.roleId = roleId;
         this.street = street;
         this.countryId = countryId;
