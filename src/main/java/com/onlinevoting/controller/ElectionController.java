@@ -134,9 +134,6 @@ public class ElectionController {
         ApiResponse<ElectionDataPoint> response = new ApiResponse<>(true, dataPoints, null);
         return ResponseEntity.ok(response);
     }
-<<<<<<< HEAD
-}
-=======
 
     @GetMapping(path="/v1/election/getResult/{electionId}", produces = "application/json")
     public ResponseEntity<ApiResponse<ElectionResultMainDTO>> getResult(@PathVariable Long electionId) {   
@@ -146,4 +143,3 @@ public class ElectionController {
     }
 
 }
->>>>>>> 383b2ca030343cdf2e47b11ec16e4c73f95ef0af
